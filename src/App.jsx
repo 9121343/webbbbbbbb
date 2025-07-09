@@ -11,6 +11,7 @@ import { useUserStore } from "./store/useStore";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import LandingPage from "./pages/LandingPage";
+import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import CategoryPage from "./pages/CategoryPage";
 import ProductPage from "./pages/ProductPage";
@@ -25,7 +26,7 @@ const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useUserStore();
 
   if (!isAuthenticated) {
-    return <Navigate to="/portal" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   return children;
@@ -94,15 +95,15 @@ function App() {
       <div className="min-h-screen">
         <AnimatePresence mode="wait">
           <Routes>
-            {/* Landing/Portal Route - No Layout */}
+            {/* Public Landing Page - No Layout */}
             <Route
-              path="/portal"
+              path="/"
               element={
                 isAuthenticated ? (
-                  <Navigate to="/" replace />
+                  <Navigate to="/home" replace />
                 ) : (
                   <motion.div
-                    key="portal"
+                    key="landing"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
@@ -114,9 +115,29 @@ function App() {
               }
             />
 
+            {/* Login Page - No Layout */}
+            <Route
+              path="/login"
+              element={
+                isAuthenticated ? (
+                  <Navigate to="/home" replace />
+                ) : (
+                  <motion.div
+                    key="login"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <LoginPage />
+                  </motion.div>
+                )
+              }
+            />
+
             {/* Protected Routes - With Layout */}
             <Route
-              path="/"
+              path="/home"
               element={
                 <ProtectedRoute>
                   <MainLayout>
@@ -267,11 +288,11 @@ function App() {
               }
             />
 
-            {/* Redirect to portal if not authenticated, or home if authenticated */}
+            {/* Catch all route */}
             <Route
               path="*"
               element={
-                <Navigate to={isAuthenticated ? "/" : "/portal"} replace />
+                <Navigate to={isAuthenticated ? "/home" : "/"} replace />
               }
             />
           </Routes>
