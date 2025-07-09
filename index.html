@@ -4,16 +4,69 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CustomCommerce - Personalize Everything</title>
+    <title>STYLEXX - Revolutionary 3D Fashion Platform</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <style>
+      body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        overflow-x: hidden;
+      }
+      .loading-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff);
+        background-size: 400% 400%;
+        animation: gradientShift 3s ease infinite;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      @keyframes gradientShift {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+    </style>
   </head>
   <body>
+    <div id="loading" class="loading-screen">
+      <div
+        style="
+          color: white;
+          font-family: &quot;Orbitron&quot;, monospace;
+          font-size: 3rem;
+          font-weight: 900;
+          text-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+        "
+      >
+        STYLEXX
+      </div>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+      setTimeout(() => {
+        const loading = document.getElementById("loading");
+        if (loading) {
+          loading.style.opacity = "0";
+          setTimeout(() => loading.remove(), 500);
+        }
+      }, 2000);
+    </script>
   </body>
 </html>
