@@ -1,8 +1,17 @@
-import React, { useState, Suspense } from "react";
+import React, { useState, Suspense, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Environment } from "@react-three/drei";
-import { motion } from "framer-motion";
+import { Canvas, useFrame } from "@react-three/fiber";
+import {
+  OrbitControls,
+  Environment,
+  Float,
+  Sphere,
+  MeshDistortMaterial,
+  Text3D,
+  Stars,
+  Effects,
+} from "@react-three/drei";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Palette,
   Type,
@@ -14,23 +23,161 @@ import {
   Share2,
   Undo2,
   Redo2,
+  Cpu,
+  Zap,
+  Eye,
+  Layers,
+  Sparkles,
 } from "lucide-react";
 import { useCartStore } from "../store/useStore";
 import toast from "react-hot-toast";
 
-// Simple 3D T-Shirt Component
-const TShirt3D = ({ color, pattern, text }) => {
+// Enhanced 3D T-Shirt Component with advanced materials
+const QuantumTShirt = ({ color, pattern, text, textColor }) => {
+  const meshRef = useRef();
+  const materialRef = useRef();
+
+  useFrame((state) => {
+    if (meshRef.current) {
+      meshRef.current.rotation.y =
+        Math.sin(state.clock.elapsedTime * 0.5) * 0.1;
+      meshRef.current.position.y =
+        Math.sin(state.clock.elapsedTime * 0.8) * 0.05;
+    }
+
+    if (materialRef.current) {
+      materialRef.current.emissiveIntensity =
+        0.1 + Math.sin(state.clock.elapsedTime * 2) * 0.05;
+    }
+  });
+
   return (
-    <mesh>
-      <boxGeometry args={[2, 2.5, 0.1]} />
-      <meshStandardMaterial color={color} />
-      {text && (
-        <mesh position={[0, 0, 0.06]}>
-          <planeGeometry args={[1, 0.3]} />
-          <meshBasicMaterial color="#000000" transparent opacity={0.8} />
+    <Float speed={1.5} rotationIntensity={0.5} floatIntensity={0.5}>
+      <group ref={meshRef}>
+        {/* Main T-Shirt Body */}
+        <mesh position={[0, 0, 0]}>
+          <boxGeometry args={[3, 3.5, 0.15]} />
+          <meshStandardMaterial
+            ref={materialRef}
+            color={color}
+            metalness={0.1}
+            roughness={0.2}
+            emissive={color}
+            emissiveIntensity={0.1}
+          />
         </mesh>
-      )}
-    </mesh>
+
+        {/* Sleeves */}
+        <mesh position={[-1.8, 1, 0]}>
+          <boxGeometry args={[0.8, 1.2, 0.15]} />
+          <meshStandardMaterial
+            color={color}
+            metalness={0.1}
+            roughness={0.2}
+            emissive={color}
+            emissiveIntensity={0.1}
+          />
+        </mesh>
+        <mesh position={[1.8, 1, 0]}>
+          <boxGeometry args={[0.8, 1.2, 0.15]} />
+          <meshStandardMaterial
+            color={color}
+            metalness={0.1}
+            roughness={0.2}
+            emissive={color}
+            emissiveIntensity={0.1}
+          />
+        </mesh>
+
+        {/* Holographic Pattern Overlay */}
+        {pattern && (
+          <mesh position={[0, 0, 0.08]}>
+            <planeGeometry args={[2.8, 3.3]} />
+            <meshStandardMaterial
+              color="#ffffff"
+              transparent
+              opacity={0.3}
+              metalness={0.8}
+              roughness={0.1}
+            />
+          </mesh>
+        )}
+
+        {/* Text Display */}
+        {text && (
+          <group position={[0, 0.2, 0.08]}>
+            <mesh>
+              <planeGeometry args={[2, 0.6]} />
+              <meshStandardMaterial
+                color={textColor}
+                transparent
+                opacity={0.9}
+                emissive={textColor}
+                emissiveIntensity={0.2}
+              />
+            </mesh>
+          </group>
+        )}
+
+        {/* Quantum Glow Effect */}
+        <Sphere args={[3.2, 32, 32]} position={[0, 0, 0]}>
+          <meshStandardMaterial
+            color={color}
+            transparent
+            opacity={0.1}
+            emissive={color}
+            emissiveIntensity={0.2}
+          />
+        </Sphere>
+      </group>
+    </Float>
+  );
+};
+
+// Floating Particles Component
+const QuantumParticles = () => {
+  const particlesRef = useRef();
+
+  useFrame((state) => {
+    if (particlesRef.current) {
+      particlesRef.current.rotation.y = state.clock.elapsedTime * 0.1;
+    }
+  });
+
+  return (
+    <group ref={particlesRef}>
+      {[...Array(20)].map((_, i) => (
+        <Float
+          key={i}
+          speed={1 + Math.random()}
+          rotationIntensity={1}
+          floatIntensity={2}
+        >
+          <Sphere
+            args={[0.02, 8, 8]}
+            position={[
+              (Math.random() - 0.5) * 10,
+              (Math.random() - 0.5) * 10,
+              (Math.random() - 0.5) * 10,
+            ]}
+          >
+            <meshStandardMaterial
+              color={
+                ["#ff006e", "#8338ec", "#3a86ff", "#06ffa5"][
+                  Math.floor(Math.random() * 4)
+                ]
+              }
+              emissive={
+                ["#ff006e", "#8338ec", "#3a86ff", "#06ffa5"][
+                  Math.floor(Math.random() * 4)
+                ]
+              }
+              emissiveIntensity={0.5}
+            />
+          </Sphere>
+        </Float>
+      ))}
+    </group>
   );
 };
 
@@ -38,158 +185,289 @@ const CustomizePage = () => {
   const { productId } = useParams();
   const { addItem } = useCartStore();
 
-  const [selectedColor, setSelectedColor] = useState("#3b82f6");
+  const [selectedColor, setSelectedColor] = useState("#3a86ff");
   const [selectedPattern, setSelectedPattern] = useState(null);
-  const [customText, setCustomText] = useState("");
-  const [textPosition, setTextPosition] = useState({ x: 0, y: 0 });
-  const [textSize, setTextSize] = useState(16);
-  const [textColor, setTextColor] = useState("#000000");
+  const [customText, setCustomText] = useState("STYLEXX");
+  const [textColor, setTextColor] = useState("#ffffff");
+  const [textSize, setTextSize] = useState(18);
   const [activeTab, setActiveTab] = useState("color");
-  const [designHistory, setDesignHistory] = useState([]);
-  const [currentStep, setCurrentStep] = useState(0);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const colors = [
-    "#3b82f6",
-    "#ef4444",
-    "#10b981",
-    "#f59e0b",
-    "#8b5cf6",
-    "#ec4899",
-    "#000000",
+    "#3a86ff",
+    "#8338ec",
+    "#ff006e",
+    "#06ffa5",
+    "#ffbe0b",
+    "#fb5607",
+    "#8ecae6",
+    "#219ebc",
+    "#023047",
     "#ffffff",
-    "#6b7280",
-    "#dc2626",
-    "#059669",
-    "#d97706",
+    "#000000",
+    "#6c757d",
   ];
 
   const patterns = [
     { id: "none", name: "None", preview: null },
-    { id: "stripes", name: "Stripes", preview: "||||" },
-    { id: "dots", name: "Polka Dots", preview: "•••" },
-    { id: "geometric", name: "Geometric", preview: "◊◊◊" },
+    { id: "quantum", name: "Quantum Grid", preview: "⬢⬢⬢" },
+    { id: "neural", name: "Neural Net", preview: "🧠🔗" },
+    { id: "matrix", name: "Digital Matrix", preview: "⚡💫" },
+    { id: "hologram", name: "Holographic", preview: "🌈✨" },
   ];
-
-  const fonts = ["Arial", "Georgia", "Times New Roman", "Helvetica", "Impact"];
 
   const product = {
     id: productId,
-    name: "Custom T-Shirt Design",
-    basePrice: 29.99,
-    customizationFee: 10.0,
+    name: "Quantum Custom Design",
+    basePrice: 89.99,
+    customizationFee: 25.0,
   };
 
   const totalPrice = product.basePrice + product.customizationFee;
 
   const handleSaveDesign = () => {
-    const design = {
-      color: selectedColor,
-      pattern: selectedPattern,
-      text: customText,
-      textPosition,
-      textSize,
-      textColor,
-    };
-    toast.success("Design saved successfully!");
-    console.log("Saved design:", design);
+    setIsProcessing(true);
+    setTimeout(() => {
+      setIsProcessing(false);
+      toast.success("Design saved to quantum vault!", {
+        style: {
+          background: "linear-gradient(45deg, #06ffa5, #3a86ff)",
+          color: "white",
+          border: "1px solid rgba(255, 255, 255, 0.2)",
+          borderRadius: "12px",
+        },
+      });
+    }, 1500);
   };
 
   const handleAddToCart = () => {
-    const customProduct = {
-      ...product,
-      name: `${product.name} (Custom)`,
-      price: totalPrice,
-      customization: {
-        color: selectedColor,
-        pattern: selectedPattern,
-        text: customText,
-        textColor,
-        textSize,
-      },
-    };
-    addItem(customProduct);
-    toast.success("Custom design added to cart!");
+    setIsProcessing(true);
+    setTimeout(() => {
+      const customProduct = {
+        ...product,
+        name: `${product.name} (Neural Custom)`,
+        price: totalPrice,
+        customization: {
+          color: selectedColor,
+          pattern: selectedPattern,
+          text: customText,
+          textColor,
+          textSize,
+        },
+      };
+      addItem(customProduct);
+      setIsProcessing(false);
+      toast.success("Quantum design added to cart!", {
+        style: {
+          background: "linear-gradient(45deg, #ff006e, #8338ec)",
+          color: "white",
+          border: "1px solid rgba(255, 255, 255, 0.2)",
+          borderRadius: "12px",
+        },
+      });
+    }, 1000);
   };
 
   const resetDesign = () => {
-    setSelectedColor("#3b82f6");
+    setSelectedColor("#3a86ff");
     setSelectedPattern(null);
-    setCustomText("");
-    setTextPosition({ x: 0, y: 0 });
-    setTextSize(16);
-    setTextColor("#000000");
-    toast.success("Design reset!");
+    setCustomText("STYLEXX");
+    setTextColor("#ffffff");
+    setTextSize(18);
+    toast.success("Design reset to quantum state!", {
+      style: {
+        background: "linear-gradient(45deg, #8338ec, #3a86ff)",
+        color: "white",
+      },
+    });
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-dark-100 relative overflow-hidden">
+      {/* Animated Background */}
+      <div className="fixed inset-0 bg-mesh animate-gradient-xy opacity-20" />
+      <div className="fixed inset-0 cyber-grid opacity-10" />
+
+      {/* Floating Orbs */}
+      {[...Array(8)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="fixed rounded-full opacity-20 pointer-events-none"
+          style={{
+            background: `radial-gradient(circle, ${colors[i % colors.length]} 0%, transparent 70%)`,
+            width: Math.random() * 100 + 50,
+            height: Math.random() * 100 + 50,
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+            filter: "blur(2px)",
+          }}
+          animate={{
+            x: [0, Math.random() * 200 - 100],
+            y: [0, Math.random() * 200 - 100],
+            scale: [1, 1.3, 1],
+          }}
+          transition={{
+            duration: Math.random() * 10 + 10,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+        />
+      ))}
+
       {/* Header */}
-      <div className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <motion.div
+        className="bg-dark-100/80 backdrop-blur-xl border-b border-neon-pink/30"
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.8 }}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-6">
               <Link
                 to={`/product/${productId}`}
-                className="text-gray-600 hover:text-gray-900"
+                className="text-white/80 hover:text-neon-cyan transition-colors duration-300 flex items-center space-x-2"
               >
-                ← Back to Product
+                <motion.div
+                  whileHover={{ x: -5 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  ← Back to Product
+                </motion.div>
               </Link>
-              <h1 className="text-2xl font-bold text-gray-900">
-                3D Designer Studio
-              </h1>
+              <div className="flex items-center space-x-3">
+                <motion.div
+                  className="w-8 h-8 bg-gradient-to-r from-neon-pink to-neon-purple rounded-lg flex items-center justify-center"
+                  animate={{ rotate: 360 }}
+                  transition={{
+                    duration: 10,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
+                >
+                  <Cpu className="w-5 h-5 text-white" />
+                </motion.div>
+                <h1 className="text-3xl font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan to-neon-blue">
+                  QUANTUM DESIGNER
+                </h1>
+              </div>
             </div>
-            <div className="flex items-center space-x-3">
-              <button
-                onClick={() => {
-                  /* Undo */
-                }}
-                className="p-2 text-gray-600 hover:text-gray-900 border rounded-lg"
+
+            <div className="flex items-center space-x-4">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="p-3 bg-dark-200/50 border border-white/20 rounded-xl text-white/80 hover:text-neon-cyan transition-colors duration-300"
               >
                 <Undo2 className="w-5 h-5" />
-              </button>
-              <button
-                onClick={() => {
-                  /* Redo */
-                }}
-                className="p-2 text-gray-600 hover:text-gray-900 border rounded-lg"
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="p-3 bg-dark-200/50 border border-white/20 rounded-xl text-white/80 hover:text-neon-cyan transition-colors duration-300"
               >
                 <Redo2 className="w-5 h-5" />
-              </button>
-              <button
+              </motion.button>
+              <motion.button
                 onClick={handleSaveDesign}
-                className="btn-secondary flex items-center"
+                disabled={isProcessing}
+                className="btn-secondary flex items-center space-x-2 disabled:opacity-50"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <Save className="w-4 h-4 mr-2" />
-                Save Design
-              </button>
+                <Save className="w-5 h-5" />
+                <span>Save to Vault</span>
+              </motion.button>
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* 3D Viewer */}
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+          <motion.div
+            className="lg:col-span-2"
+            initial={{ opacity: 0, x: -100 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            <div className="card-dark relative overflow-hidden">
               <div className="h-96 lg:h-[600px] relative">
-                <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
+                {/* Processing Overlay */}
+                <AnimatePresence>
+                  {isProcessing && (
+                    <motion.div
+                      className="absolute inset-0 bg-dark-100/80 backdrop-blur-sm z-10 flex items-center justify-center"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                    >
+                      <div className="text-center">
+                        <motion.div
+                          className="w-20 h-20 border-4 border-neon-cyan border-t-transparent rounded-full mx-auto mb-4"
+                          animate={{ rotate: 360 }}
+                          transition={{
+                            duration: 1,
+                            repeat: Infinity,
+                            ease: "linear",
+                          }}
+                        />
+                        <p className="text-neon-cyan font-semibold">
+                          Processing Quantum Data...
+                        </p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <Canvas camera={{ position: [0, 0, 6], fov: 60 }}>
                   <Suspense fallback={null}>
-                    <ambientLight intensity={0.5} />
-                    <pointLight position={[10, 10, 10]} />
-                    <TShirt3D
+                    <ambientLight intensity={0.4} />
+                    <pointLight
+                      position={[10, 10, 10]}
+                      color="#ff006e"
+                      intensity={1}
+                    />
+                    <pointLight
+                      position={[-10, -10, -10]}
+                      color="#8338ec"
+                      intensity={1}
+                    />
+                    <pointLight
+                      position={[0, 10, 0]}
+                      color="#3a86ff"
+                      intensity={0.8}
+                    />
+
+                    <QuantumTShirt
                       color={selectedColor}
                       pattern={selectedPattern}
                       text={customText}
+                      textColor={textColor}
                     />
-                    <OrbitControls enablePan={false} />
-                    <Environment preset="studio" />
+
+                    <QuantumParticles />
+                    <Stars
+                      radius={100}
+                      depth={50}
+                      count={500}
+                      factor={4}
+                      saturation={0}
+                      fade
+                    />
+                    <Environment preset="night" />
+                    <OrbitControls
+                      enablePan={false}
+                      maxDistance={10}
+                      minDistance={3}
+                    />
                   </Suspense>
                 </Canvas>
 
-                {/* Overlay Text */}
+                {/* Real-time Text Overlay */}
                 {customText && (
-                  <div
+                  <motion.div
                     className="absolute pointer-events-none"
                     style={{
                       left: "50%",
@@ -197,219 +475,291 @@ const CustomizePage = () => {
                       transform: "translate(-50%, -50%)",
                       fontSize: `${textSize}px`,
                       color: textColor,
+                      fontFamily: "Orbitron, monospace",
                       fontWeight: "bold",
-                      textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
+                      textShadow: `0 0 20px ${textColor}, 0 0 40px ${textColor}`,
+                      zIndex: 5,
+                    }}
+                    animate={{
+                      scale: [1, 1.05, 1],
+                      opacity: [0.8, 1, 0.8],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut",
                     }}
                   >
                     {customText}
-                  </div>
+                  </motion.div>
                 )}
               </div>
 
-              {/* 3D Controls */}
-              <div className="p-4 bg-gray-50 border-t">
-                <div className="flex items-center justify-between text-sm text-gray-600">
-                  <span>Use mouse to rotate and zoom</span>
-                  <div className="flex space-x-4">
-                    <button className="hover:text-gray-900">
+              {/* 3D Controls Bar */}
+              <div className="p-4 bg-dark-200/50 border-t border-white/10">
+                <div className="flex items-center justify-between text-sm text-white/60">
+                  <div className="flex items-center space-x-4">
+                    <span className="flex items-center space-x-2">
+                      <Eye className="w-4 h-4" />
+                      <span>Neural Vision Active</span>
+                    </span>
+                    <span className="flex items-center space-x-2">
+                      <Zap className="w-4 h-4 text-neon-cyan" />
+                      <span>Quantum Rendering</span>
+                    </span>
+                  </div>
+                  <div className="flex space-x-3">
+                    <motion.button
+                      className="hover:text-neon-cyan transition-colors duration-300"
+                      whileHover={{ scale: 1.1 }}
+                    >
                       <Download className="w-4 h-4" />
-                    </button>
-                    <button className="hover:text-gray-900">
+                    </motion.button>
+                    <motion.button
+                      className="hover:text-neon-pink transition-colors duration-300"
+                      whileHover={{ scale: 1.1 }}
+                    >
                       <Share2 className="w-4 h-4" />
-                    </button>
+                    </motion.button>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Customization Panel */}
-          <div className="space-y-6">
-            {/* Tabs */}
-            <div className="bg-white rounded-lg shadow-lg">
-              <div className="border-b">
+          <motion.div
+            className="space-y-6"
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+          >
+            {/* Neural Tabs */}
+            <div className="card-dark">
+              <div className="border-b border-white/10">
                 <nav className="flex">
                   {[
-                    { id: "color", name: "Color", icon: Palette },
-                    { id: "text", name: "Text", icon: Type },
-                    { id: "graphics", name: "Graphics", icon: ImageIcon },
+                    { id: "color", name: "Spectrum", icon: Palette },
+                    { id: "text", name: "Neural Text", icon: Type },
+                    { id: "patterns", name: "Quantum Mesh", icon: Layers },
                   ].map((tab) => {
                     const Icon = tab.icon;
                     return (
-                      <button
+                      <motion.button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
-                        className={`flex-1 flex items-center justify-center py-3 px-4 text-sm font-medium ${
+                        className={`flex-1 flex items-center justify-center py-4 px-4 text-sm font-medium transition-all duration-300 ${
                           activeTab === tab.id
-                            ? "border-b-2 border-primary-600 text-primary-600"
-                            : "text-gray-500 hover:text-gray-700"
+                            ? "border-b-2 border-neon-cyan text-neon-cyan bg-neon-cyan/10"
+                            : "text-white/60 hover:text-white hover:bg-white/5"
                         }`}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
                       >
-                        <Icon className="w-4 h-4 mr-2" />
+                        <Icon className="w-5 h-5 mr-2" />
                         {tab.name}
-                      </button>
+                      </motion.button>
                     );
                   })}
                 </nav>
               </div>
 
               <div className="p-6">
-                {/* Color Tab */}
-                {activeTab === "color" && (
-                  <div className="space-y-6">
-                    <div>
-                      <h3 className="text-lg font-semibold mb-4">Base Color</h3>
-                      <div className="grid grid-cols-4 gap-3">
-                        {colors.map((color) => (
-                          <button
-                            key={color}
-                            onClick={() => setSelectedColor(color)}
-                            className={`w-12 h-12 rounded-lg border-2 ${
-                              selectedColor === color
-                                ? "border-gray-900"
-                                : "border-gray-300"
-                            }`}
-                            style={{ backgroundColor: color }}
-                          />
-                        ))}
+                <AnimatePresence mode="wait">
+                  {/* Color Spectrum Tab */}
+                  {activeTab === "color" && (
+                    <motion.div
+                      key="color"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      className="space-y-6"
+                    >
+                      <div>
+                        <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+                          <Sparkles className="w-5 h-5 mr-2 text-neon-cyan" />
+                          Quantum Spectrum
+                        </h3>
+                        <div className="grid grid-cols-4 gap-3">
+                          {colors.map((color, index) => (
+                            <motion.button
+                              key={color}
+                              onClick={() => setSelectedColor(color)}
+                              className={`w-12 h-12 rounded-xl border-2 transition-all duration-300 ${
+                                selectedColor === color
+                                  ? "border-white shadow-neon scale-110"
+                                  : "border-white/20 hover:border-white/40 hover:scale-105"
+                              }`}
+                              style={{ backgroundColor: color }}
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.95 }}
+                              initial={{ opacity: 0, scale: 0 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{ delay: index * 0.05 }}
+                            />
+                          ))}
+                        </div>
                       </div>
-                    </div>
+                    </motion.div>
+                  )}
 
-                    <div>
-                      <h3 className="text-lg font-semibold mb-4">Pattern</h3>
+                  {/* Neural Text Tab */}
+                  {activeTab === "text" && (
+                    <motion.div
+                      key="text"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      className="space-y-6"
+                    >
+                      <div>
+                        <label className="block text-sm font-medium text-white/80 mb-3">
+                          Neural Message
+                        </label>
+                        <input
+                          type="text"
+                          value={customText}
+                          onChange={(e) => setCustomText(e.target.value)}
+                          placeholder="Enter quantum text..."
+                          className="input-field"
+                          maxLength={20}
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-white/80 mb-3">
+                          Text Intensity: {textSize}px
+                        </label>
+                        <input
+                          type="range"
+                          min="12"
+                          max="28"
+                          value={textSize}
+                          onChange={(e) =>
+                            setTextSize(parseInt(e.target.value))
+                          }
+                          className="w-full accent-neon-cyan"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-white/80 mb-3">
+                          Text Spectrum
+                        </label>
+                        <div className="grid grid-cols-4 gap-2">
+                          {colors.slice(0, 8).map((color) => (
+                            <motion.button
+                              key={color}
+                              onClick={() => setTextColor(color)}
+                              className={`w-10 h-10 rounded-lg border-2 ${
+                                textColor === color
+                                  ? "border-white"
+                                  : "border-white/20"
+                              }`}
+                              style={{ backgroundColor: color }}
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {/* Quantum Patterns Tab */}
+                  {activeTab === "patterns" && (
+                    <motion.div
+                      key="patterns"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      className="space-y-6"
+                    >
+                      <h3 className="text-lg font-semibold text-white mb-4">
+                        Quantum Mesh Patterns
+                      </h3>
                       <div className="grid grid-cols-2 gap-3">
                         {patterns.map((pattern) => (
-                          <button
+                          <motion.button
                             key={pattern.id}
                             onClick={() =>
                               setSelectedPattern(
                                 pattern.id === "none" ? null : pattern.id,
                               )
                             }
-                            className={`p-3 border rounded-lg text-center ${
+                            className={`p-4 border-2 rounded-xl text-center transition-all duration-300 ${
                               selectedPattern === pattern.id ||
                               (selectedPattern === null &&
                                 pattern.id === "none")
-                                ? "border-primary-600 bg-primary-50"
-                                : "border-gray-300 hover:border-gray-400"
+                                ? "border-neon-cyan bg-neon-cyan/10 text-neon-cyan"
+                                : "border-white/20 text-white/80 hover:border-white/40"
                             }`}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
                           >
-                            <div className="text-lg mb-1">
+                            <div className="text-xl mb-2">
                               {pattern.preview}
                             </div>
-                            <div className="text-sm">{pattern.name}</div>
-                          </button>
+                            <div className="text-sm font-medium">
+                              {pattern.name}
+                            </div>
+                          </motion.button>
                         ))}
                       </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Text Tab */}
-                {activeTab === "text" && (
-                  <div className="space-y-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Custom Text
-                      </label>
-                      <input
-                        type="text"
-                        value={customText}
-                        onChange={(e) => setCustomText(e.target.value)}
-                        placeholder="Enter your text..."
-                        className="input-field"
-                        maxLength={50}
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Text Size
-                      </label>
-                      <input
-                        type="range"
-                        min="12"
-                        max="32"
-                        value={textSize}
-                        onChange={(e) => setTextSize(parseInt(e.target.value))}
-                        className="w-full"
-                      />
-                      <div className="flex justify-between text-sm text-gray-500 mt-1">
-                        <span>Small</span>
-                        <span>Large</span>
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Text Color
-                      </label>
-                      <div className="grid grid-cols-4 gap-2">
-                        {colors.slice(0, 8).map((color) => (
-                          <button
-                            key={color}
-                            onClick={() => setTextColor(color)}
-                            className={`w-10 h-10 rounded border-2 ${
-                              textColor === color
-                                ? "border-gray-900"
-                                : "border-gray-300"
-                            }`}
-                            style={{ backgroundColor: color }}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Graphics Tab */}
-                {activeTab === "graphics" && (
-                  <div className="space-y-6">
-                    <div className="text-center py-8 text-gray-500">
-                      <ImageIcon className="w-12 h-12 mx-auto mb-4" />
-                      <p>Graphics upload feature</p>
-                      <p className="text-sm">Coming soon!</p>
-                    </div>
-                  </div>
-                )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
 
-            {/* Price & Actions */}
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <div className="space-y-4">
-                <div className="flex justify-between">
-                  <span>Base Price:</span>
+            {/* Neural Pricing */}
+            <div className="card-dark p-6">
+              <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+                <Cpu className="w-5 h-5 mr-2 text-neon-pink" />
+                Quantum Pricing
+              </h3>
+              <div className="space-y-3">
+                <div className="flex justify-between text-white/80">
+                  <span>Base Neural Core:</span>
                   <span>${product.basePrice}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span>Customization:</span>
+                <div className="flex justify-between text-white/80">
+                  <span>Quantum Enhancement:</span>
                   <span>${product.customizationFee}</span>
                 </div>
-                <div className="border-t pt-2 flex justify-between font-semibold text-lg">
-                  <span>Total:</span>
-                  <span>${totalPrice.toFixed(2)}</span>
+                <div className="border-t border-white/20 pt-3 flex justify-between font-bold text-lg">
+                  <span className="text-neon-cyan">Total Quantum Cost:</span>
+                  <span className="text-neon-cyan">
+                    ${totalPrice.toFixed(2)}
+                  </span>
                 </div>
               </div>
 
-              <div className="mt-6 space-y-3">
-                <button
+              <div className="mt-6 space-y-4">
+                <motion.button
                   onClick={handleAddToCart}
-                  className="w-full btn-primary py-3 flex items-center justify-center"
+                  disabled={isProcessing}
+                  className="w-full btn-primary py-4 flex items-center justify-center space-x-3 disabled:opacity-50"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                 >
-                  <ShoppingCart className="w-5 h-5 mr-2" />
-                  Add to Cart
-                </button>
-                <button
+                  <ShoppingCart className="w-6 h-6" />
+                  <span>Deploy to Cart</span>
+                  <Zap className="w-5 h-5" />
+                </motion.button>
+
+                <motion.button
                   onClick={resetDesign}
-                  className="w-full btn-secondary py-3 flex items-center justify-center"
+                  className="w-full btn-secondary py-4 flex items-center justify-center space-x-3"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                 >
-                  <RotateCcw className="w-5 h-5 mr-2" />
-                  Reset Design
-                </button>
+                  <RotateCcw className="w-5 h-5" />
+                  <span>Reset Quantum State</span>
+                </motion.button>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>
