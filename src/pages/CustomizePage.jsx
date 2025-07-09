@@ -4,12 +4,8 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import {
   OrbitControls,
   Environment,
-  Float,
-  Sphere,
-  MeshDistortMaterial,
-  Text3D,
-  Stars,
-  Effects,
+  ContactShadows,
+  PerspectiveCamera,
 } from "@react-three/drei";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -32,151 +28,108 @@ import {
 import { useCartStore } from "../store/useStore";
 import toast from "react-hot-toast";
 
-// Enhanced 3D T-Shirt Component with advanced materials
-const QuantumTShirt = ({ color, pattern, text, textColor }) => {
+// Realistic 3D T-Shirt Component
+const RealisticTShirt = ({ color, pattern, text, textColor, textSize }) => {
   const meshRef = useRef();
-  const materialRef = useRef();
+  const textRef = useRef();
 
   useFrame((state) => {
     if (meshRef.current) {
       meshRef.current.rotation.y =
-        Math.sin(state.clock.elapsedTime * 0.5) * 0.1;
+        Math.sin(state.clock.elapsedTime * 0.3) * 0.1;
       meshRef.current.position.y =
-        Math.sin(state.clock.elapsedTime * 0.8) * 0.05;
-    }
-
-    if (materialRef.current) {
-      materialRef.current.emissiveIntensity =
-        0.1 + Math.sin(state.clock.elapsedTime * 2) * 0.05;
+        Math.sin(state.clock.elapsedTime * 0.6) * 0.05;
     }
   });
 
   return (
-    <Float speed={1.5} rotationIntensity={0.5} floatIntensity={0.5}>
-      <group ref={meshRef}>
-        {/* Main T-Shirt Body */}
-        <mesh position={[0, 0, 0]}>
-          <boxGeometry args={[3, 3.5, 0.15]} />
-          <meshStandardMaterial
-            ref={materialRef}
-            color={color}
-            metalness={0.1}
-            roughness={0.2}
-            emissive={color}
-            emissiveIntensity={0.1}
-          />
-        </mesh>
+    <group ref={meshRef}>
+      {/* Main T-Shirt Body with realistic shape */}
+      <mesh position={[0, 0, 0]} castShadow receiveShadow>
+        <cylinderGeometry args={[1.3, 1.5, 2.8, 16]} />
+        <meshStandardMaterial
+          color={color}
+          roughness={0.4}
+          metalness={0.1}
+          envMapIntensity={0.6}
+        />
+      </mesh>
 
-        {/* Sleeves */}
-        <mesh position={[-1.8, 1, 0]}>
-          <boxGeometry args={[0.8, 1.2, 0.15]} />
-          <meshStandardMaterial
-            color={color}
-            metalness={0.1}
-            roughness={0.2}
-            emissive={color}
-            emissiveIntensity={0.1}
-          />
-        </mesh>
-        <mesh position={[1.8, 1, 0]}>
-          <boxGeometry args={[0.8, 1.2, 0.15]} />
-          <meshStandardMaterial
-            color={color}
-            metalness={0.1}
-            roughness={0.2}
-            emissive={color}
-            emissiveIntensity={0.1}
-          />
-        </mesh>
+      {/* Left Sleeve */}
+      <mesh position={[-1.7, 0.9, 0]} rotation={[0, 0, Math.PI / 6]} castShadow>
+        <cylinderGeometry args={[0.45, 0.55, 1.4, 12]} />
+        <meshStandardMaterial color={color} roughness={0.4} metalness={0.1} />
+      </mesh>
 
-        {/* Holographic Pattern Overlay */}
-        {pattern && (
-          <mesh position={[0, 0, 0.08]}>
-            <planeGeometry args={[2.8, 3.3]} />
+      {/* Right Sleeve */}
+      <mesh position={[1.7, 0.9, 0]} rotation={[0, 0, -Math.PI / 6]} castShadow>
+        <cylinderGeometry args={[0.45, 0.55, 1.4, 12]} />
+        <meshStandardMaterial color={color} roughness={0.4} metalness={0.1} />
+      </mesh>
+
+      {/* Collar */}
+      <mesh position={[0, 1.5, 0]} castShadow>
+        <torusGeometry args={[0.9, 0.12, 8, 16]} />
+        <meshStandardMaterial color={color} roughness={0.3} metalness={0.2} />
+      </mesh>
+
+      {/* Bottom Hem */}
+      <mesh position={[0, -1.4, 0]}>
+        <torusGeometry args={[1.5, 0.08, 8, 16]} />
+        <meshStandardMaterial color={color} roughness={0.3} metalness={0.1} />
+      </mesh>
+
+      {/* Sleeve Hems */}
+      <mesh position={[-1.7, 0.2, 0]} rotation={[Math.PI / 2, 0, Math.PI / 6]}>
+        <torusGeometry args={[0.55, 0.06, 6, 12]} />
+        <meshStandardMaterial color={color} roughness={0.3} metalness={0.1} />
+      </mesh>
+      <mesh position={[1.7, 0.2, 0]} rotation={[Math.PI / 2, 0, -Math.PI / 6]}>
+        <torusGeometry args={[0.55, 0.06, 6, 12]} />
+        <meshStandardMaterial color={color} roughness={0.3} metalness={0.1} />
+      </mesh>
+
+      {/* Pattern Overlay */}
+      {pattern && pattern !== "none" && (
+        <mesh position={[0, 0.2, 1.31]}>
+          <planeGeometry args={[2.4, 2.2]} />
+          <meshStandardMaterial
+            color="#ffffff"
+            transparent
+            opacity={0.4}
+            roughness={0.6}
+            metalness={0.1}
+          />
+        </mesh>
+      )}
+
+      {/* Text Display */}
+      {text && (
+        <group position={[0, 0.3, 1.32]} ref={textRef}>
+          <mesh>
+            <planeGeometry args={[Math.min(text.length * 0.15, 2.2), 0.4]} />
             <meshStandardMaterial
-              color="#ffffff"
+              color={textColor}
               transparent
-              opacity={0.3}
-              metalness={0.8}
-              roughness={0.1}
+              opacity={0.9}
+              emissive={textColor}
+              emissiveIntensity={0.1}
             />
           </mesh>
-        )}
+        </group>
+      )}
 
-        {/* Text Display */}
-        {text && (
-          <group position={[0, 0.2, 0.08]}>
-            <mesh>
-              <planeGeometry args={[2, 0.6]} />
-              <meshStandardMaterial
-                color={textColor}
-                transparent
-                opacity={0.9}
-                emissive={textColor}
-                emissiveIntensity={0.2}
-              />
-            </mesh>
-          </group>
-        )}
-
-        {/* Quantum Glow Effect */}
-        <Sphere args={[3.2, 32, 32]} position={[0, 0, 0]}>
-          <meshStandardMaterial
-            color={color}
-            transparent
-            opacity={0.1}
-            emissive={color}
-            emissiveIntensity={0.2}
-          />
-        </Sphere>
-      </group>
-    </Float>
-  );
-};
-
-// Floating Particles Component
-const QuantumParticles = () => {
-  const particlesRef = useRef();
-
-  useFrame((state) => {
-    if (particlesRef.current) {
-      particlesRef.current.rotation.y = state.clock.elapsedTime * 0.1;
-    }
-  });
-
-  return (
-    <group ref={particlesRef}>
-      {[...Array(20)].map((_, i) => (
-        <Float
-          key={i}
-          speed={1 + Math.random()}
-          rotationIntensity={1}
-          floatIntensity={2}
-        >
-          <Sphere
-            args={[0.02, 8, 8]}
-            position={[
-              (Math.random() - 0.5) * 10,
-              (Math.random() - 0.5) * 10,
-              (Math.random() - 0.5) * 10,
-            ]}
-          >
-            <meshStandardMaterial
-              color={
-                ["#ff006e", "#8338ec", "#3a86ff", "#06ffa5"][
-                  Math.floor(Math.random() * 4)
-                ]
-              }
-              emissive={
-                ["#ff006e", "#8338ec", "#3a86ff", "#06ffa5"][
-                  Math.floor(Math.random() * 4)
-                ]
-              }
-              emissiveIntensity={0.5}
-            />
-          </Sphere>
-        </Float>
-      ))}
+      {/* Fabric Texture Enhancement */}
+      <mesh position={[0, 0, 1.3]}>
+        <planeGeometry args={[2.6, 2.8]} />
+        <meshStandardMaterial
+          color={color}
+          transparent
+          opacity={0.1}
+          roughness={0.8}
+          normalScale={[0.1, 0.1]}
+        />
+      </mesh>
     </group>
   );
 };
@@ -274,16 +227,11 @@ const CustomizePage = () => {
     setCustomText("STYLEXX");
     setTextColor("#ffffff");
     setTextSize(18);
-    toast.success("Design reset to quantum state!", {
-      style: {
-        background: "linear-gradient(45deg, #8338ec, #3a86ff)",
-        color: "white",
-      },
-    });
+    toast.success("Design reset to quantum state!");
   };
 
   return (
-    <div className="min-h-screen bg-dark-100 relative overflow-hidden">
+    <div className="min-h-screen bg-dark-100 relative overflow-hidden pt-32">
       {/* Animated Background */}
       <div className="fixed inset-0 bg-mesh animate-gradient-xy opacity-20" />
       <div className="fixed inset-0 cyber-grid opacity-10" />
@@ -322,7 +270,7 @@ const CustomizePage = () => {
         transition={{ duration: 0.8 }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex items-center space-x-6">
               <Link
                 to={`/product/${productId}`}
@@ -347,7 +295,7 @@ const CustomizePage = () => {
                 >
                   <Cpu className="w-5 h-5 text-white" />
                 </motion.div>
-                <h1 className="text-3xl font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan to-neon-blue">
+                <h1 className="text-2xl lg:text-3xl font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan to-neon-blue">
                   QUANTUM DESIGNER
                 </h1>
               </div>
@@ -376,7 +324,7 @@ const CustomizePage = () => {
                 whileTap={{ scale: 0.95 }}
               >
                 <Save className="w-5 h-5" />
-                <span>Save to Vault</span>
+                <span className="hidden sm:inline">Save to Vault</span>
               </motion.button>
             </div>
           </div>
@@ -384,10 +332,10 @@ const CustomizePage = () => {
       </motion.div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
           {/* 3D Viewer */}
           <motion.div
-            className="lg:col-span-2"
+            className="xl:col-span-2"
             initial={{ opacity: 0, x: -100 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -421,46 +369,46 @@ const CustomizePage = () => {
                   )}
                 </AnimatePresence>
 
-                <Canvas camera={{ position: [0, 0, 6], fov: 60 }}>
+                <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
                   <Suspense fallback={null}>
-                    <ambientLight intensity={0.4} />
-                    <pointLight
-                      position={[10, 10, 10]}
-                      color="#ff006e"
+                    <PerspectiveCamera makeDefault position={[0, 0, 5]} />
+                    <ambientLight intensity={0.6} />
+                    <directionalLight
+                      position={[10, 10, 5]}
                       intensity={1}
+                      castShadow
                     />
-                    <pointLight
-                      position={[-10, -10, -10]}
-                      color="#8338ec"
-                      intensity={1}
-                    />
+                    <pointLight position={[-10, -10, -5]} intensity={0.5} />
                     <pointLight
                       position={[0, 10, 0]}
                       color="#3a86ff"
                       intensity={0.8}
                     />
 
-                    <QuantumTShirt
+                    <RealisticTShirt
                       color={selectedColor}
                       pattern={selectedPattern}
                       text={customText}
                       textColor={textColor}
+                      textSize={textSize}
                     />
 
-                    <QuantumParticles />
-                    <Stars
-                      radius={100}
-                      depth={50}
-                      count={500}
-                      factor={4}
-                      saturation={0}
-                      fade
+                    <ContactShadows
+                      opacity={0.6}
+                      scale={8}
+                      blur={1}
+                      far={10}
+                      resolution={256}
+                      color="#000000"
                     />
-                    <Environment preset="night" />
+
+                    <Environment preset="city" />
                     <OrbitControls
                       enablePan={false}
-                      maxDistance={10}
+                      maxDistance={8}
                       minDistance={3}
+                      maxPolarAngle={Math.PI / 1.8}
+                      minPolarAngle={Math.PI / 6}
                     />
                   </Suspense>
                 </Canvas>
@@ -473,16 +421,16 @@ const CustomizePage = () => {
                       left: "50%",
                       top: "45%",
                       transform: "translate(-50%, -50%)",
-                      fontSize: `${textSize}px`,
+                      fontSize: `${Math.max(textSize * 0.8, 14)}px`,
                       color: textColor,
                       fontFamily: "Orbitron, monospace",
                       fontWeight: "bold",
-                      textShadow: `0 0 20px ${textColor}, 0 0 40px ${textColor}`,
+                      textShadow: `0 0 10px ${textColor}40, 0 0 20px ${textColor}20`,
                       zIndex: 5,
                     }}
                     animate={{
-                      scale: [1, 1.05, 1],
-                      opacity: [0.8, 1, 0.8],
+                      scale: [1, 1.02, 1],
+                      opacity: [0.9, 1, 0.9],
                     }}
                     transition={{
                       duration: 2,
@@ -497,8 +445,8 @@ const CustomizePage = () => {
 
               {/* 3D Controls Bar */}
               <div className="p-4 bg-dark-200/50 border-t border-white/10">
-                <div className="flex items-center justify-between text-sm text-white/60">
-                  <div className="flex items-center space-x-4">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between text-sm text-white/60 gap-4">
+                  <div className="flex flex-wrap items-center gap-4">
                     <span className="flex items-center space-x-2">
                       <Eye className="w-4 h-4" />
                       <span>Neural Vision Active</span>
@@ -548,7 +496,7 @@ const CustomizePage = () => {
                       <motion.button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
-                        className={`flex-1 flex items-center justify-center py-4 px-4 text-sm font-medium transition-all duration-300 ${
+                        className={`flex-1 flex items-center justify-center py-4 px-2 lg:px-4 text-sm font-medium transition-all duration-300 ${
                           activeTab === tab.id
                             ? "border-b-2 border-neon-cyan text-neon-cyan bg-neon-cyan/10"
                             : "text-white/60 hover:text-white hover:bg-white/5"
@@ -556,17 +504,17 @@ const CustomizePage = () => {
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                       >
-                        <Icon className="w-5 h-5 mr-2" />
-                        {tab.name}
+                        <Icon className="w-4 h-4 lg:w-5 lg:h-5 mr-1 lg:mr-2" />
+                        <span className="text-xs lg:text-sm">{tab.name}</span>
                       </motion.button>
                     );
                   })}
                 </nav>
               </div>
 
-              <div className="p-6">
+              <div className="p-4 lg:p-6">
                 <AnimatePresence mode="wait">
-                  {/* Color Spectrum Tab */}
+                  {/* Color Tab */}
                   {activeTab === "color" && (
                     <motion.div
                       key="color"
@@ -580,12 +528,12 @@ const CustomizePage = () => {
                           <Sparkles className="w-5 h-5 mr-2 text-neon-cyan" />
                           Quantum Spectrum
                         </h3>
-                        <div className="grid grid-cols-4 gap-3">
+                        <div className="grid grid-cols-3 lg:grid-cols-4 gap-3">
                           {colors.map((color, index) => (
                             <motion.button
                               key={color}
                               onClick={() => setSelectedColor(color)}
-                              className={`w-12 h-12 rounded-xl border-2 transition-all duration-300 ${
+                              className={`w-10 h-10 lg:w-12 lg:h-12 rounded-xl border-2 transition-all duration-300 ${
                                 selectedColor === color
                                   ? "border-white shadow-neon scale-110"
                                   : "border-white/20 hover:border-white/40 hover:scale-105"
@@ -594,7 +542,10 @@ const CustomizePage = () => {
                               whileHover={{ scale: 1.1 }}
                               whileTap={{ scale: 0.95 }}
                               initial={{ opacity: 0, scale: 0 }}
-                              animate={{ opacity: 1, scale: 1 }}
+                              animate={{
+                                opacity: 1,
+                                scale: selectedColor === color ? 1.1 : 1,
+                              }}
                               transition={{ delay: index * 0.05 }}
                             />
                           ))}
@@ -603,7 +554,7 @@ const CustomizePage = () => {
                     </motion.div>
                   )}
 
-                  {/* Neural Text Tab */}
+                  {/* Text Tab */}
                   {activeTab === "text" && (
                     <motion.div
                       key="text"
@@ -613,7 +564,7 @@ const CustomizePage = () => {
                       className="space-y-6"
                     >
                       <div>
-                        <label className="block text-sm font-medium text-white/80 mb-3">
+                        <label className="block text-sm font-medium text-white/80 mb-2">
                           Neural Message
                         </label>
                         <input
@@ -627,7 +578,7 @@ const CustomizePage = () => {
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-white/80 mb-3">
+                        <label className="block text-sm font-medium text-white/80 mb-2">
                           Text Intensity: {textSize}px
                         </label>
                         <input
@@ -643,7 +594,7 @@ const CustomizePage = () => {
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-white/80 mb-3">
+                        <label className="block text-sm font-medium text-white/80 mb-2">
                           Text Spectrum
                         </label>
                         <div className="grid grid-cols-4 gap-2">
@@ -651,7 +602,7 @@ const CustomizePage = () => {
                             <motion.button
                               key={color}
                               onClick={() => setTextColor(color)}
-                              className={`w-10 h-10 rounded-lg border-2 ${
+                              className={`w-8 h-8 lg:w-10 lg:h-10 rounded-lg border-2 ${
                                 textColor === color
                                   ? "border-white"
                                   : "border-white/20"
@@ -666,7 +617,7 @@ const CustomizePage = () => {
                     </motion.div>
                   )}
 
-                  {/* Quantum Patterns Tab */}
+                  {/* Patterns Tab */}
                   {activeTab === "patterns" && (
                     <motion.div
                       key="patterns"
@@ -678,7 +629,7 @@ const CustomizePage = () => {
                       <h3 className="text-lg font-semibold text-white mb-4">
                         Quantum Mesh Patterns
                       </h3>
-                      <div className="grid grid-cols-2 gap-3">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
                         {patterns.map((pattern) => (
                           <motion.button
                             key={pattern.id}
@@ -713,7 +664,7 @@ const CustomizePage = () => {
             </div>
 
             {/* Neural Pricing */}
-            <div className="card-dark p-6">
+            <div className="card-dark p-4 lg:p-6">
               <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
                 <Cpu className="w-5 h-5 mr-2 text-neon-pink" />
                 Quantum Pricing
@@ -743,9 +694,9 @@ const CustomizePage = () => {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  <ShoppingCart className="w-6 h-6" />
+                  <ShoppingCart className="w-5 h-5 lg:w-6 lg:h-6" />
                   <span>Deploy to Cart</span>
-                  <Zap className="w-5 h-5" />
+                  <Zap className="w-4 h-4 lg:w-5 lg:h-5" />
                 </motion.button>
 
                 <motion.button
