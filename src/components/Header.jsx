@@ -42,7 +42,7 @@ const Header = () => {
   const handleLogout = () => {
     logout();
     setShowUserMenu(false);
-    navigate("/portal");
+    navigate("/");
   };
 
   return (
@@ -90,7 +90,7 @@ const Header = () => {
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link to="/" className="flex items-center space-x-3 group">
+              <Link to="/home" className="flex items-center space-x-3 group">
                 <motion.div
                   className="relative"
                   animate={{
