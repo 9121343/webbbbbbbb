@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Search, ShoppingCart, User, Menu, X, Heart, Zap } from "lucide-react";
+import {
+  Search,
+  ShoppingCart,
+  User,
+  Menu,
+  X,
+  Heart,
+  Zap,
+  LogOut,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCartStore, useUserStore, useProductStore } from "../store/useStore";
 
@@ -8,10 +17,11 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [scrolled, setScrolled] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
   const navigate = useNavigate();
 
   const { getTotalItems } = useCartStore();
-  const { isAuthenticated, user } = useUserStore();
+  const { isAuthenticated, user, logout } = useUserStore();
   const { categories } = useProductStore();
 
   useEffect(() => {
@@ -27,6 +37,12 @@ const Header = () => {
     if (searchQuery.trim()) {
       navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
     }
+  };
+
+  const handleLogout = () => {
+    logout();
+    setShowUserMenu(false);
+    navigate("/portal");
   };
 
   return (
@@ -172,40 +188,58 @@ const Header = () => {
                 </Link>
               </motion.div>
 
-              {/* User Account */}
-              <motion.div
-                className="relative"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                {isAuthenticated ? (
-                  <Link
-                    to="/profile"
-                    className="flex items-center space-x-3 text-white/80 hover:text-neon-cyan transition-colors duration-300 group"
-                  >
-                    <div className="relative">
-                      <User className="w-6 h-6" />
-                      <div className="absolute inset-0 bg-neon-cyan/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse"></div>
-                    </div>
-                    <span className="hidden sm:block text-sm font-medium">
-                      {user?.name || "Profile"}
-                    </span>
-                  </Link>
-                ) : (
-                  <Link
-                    to="/profile"
-                    className="flex items-center space-x-3 text-white/80 hover:text-neon-cyan transition-colors duration-300 group"
-                  >
-                    <div className="relative">
-                      <User className="w-6 h-6" />
-                      <div className="absolute inset-0 bg-neon-cyan/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse"></div>
-                    </div>
-                    <span className="hidden sm:block text-sm font-medium">
-                      Enter Portal
-                    </span>
-                  </Link>
-                )}
-              </motion.div>
+              {/* User Account with Dropdown */}
+              <div className="relative">
+                <motion.button
+                  onClick={() => setShowUserMenu(!showUserMenu)}
+                  className="flex items-center space-x-3 text-white/80 hover:text-neon-cyan transition-colors duration-300 group p-2 rounded-xl"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <div className="relative">
+                    <User className="w-6 h-6" />
+                    <div className="absolute inset-0 bg-neon-cyan/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse"></div>
+                  </div>
+                  <span className="hidden sm:block text-sm font-medium">
+                    {user?.name || "Neural User"}
+                  </span>
+                </motion.button>
+
+                {/* User Dropdown Menu */}
+                <AnimatePresence>
+                  {showUserMenu && (
+                    <motion.div
+                      className="absolute right-0 mt-2 w-48 card-dark border border-white/20 rounded-xl overflow-hidden z-50"
+                      initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <div className="p-4 border-b border-white/10">
+                        <p className="text-white font-medium">{user?.name}</p>
+                        <p className="text-white/60 text-sm">{user?.email}</p>
+                      </div>
+                      <div className="py-2">
+                        <Link
+                          to="/profile"
+                          onClick={() => setShowUserMenu(false)}
+                          className="flex items-center px-4 py-2 text-white/80 hover:text-white hover:bg-white/10 transition-colors duration-300"
+                        >
+                          <User className="w-4 h-4 mr-3" />
+                          Profile
+                        </Link>
+                        <button
+                          onClick={handleLogout}
+                          className="w-full flex items-center px-4 py-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors duration-300"
+                        >
+                          <LogOut className="w-4 h-4 mr-3" />
+                          Exit Portal
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
 
               {/* Mobile Menu Button */}
               <motion.button
@@ -319,6 +353,28 @@ const Header = () => {
                       </Link>
                     </motion.div>
                   ))}
+                </div>
+
+                {/* Mobile User Actions */}
+                <div className="mt-6 pt-6 border-t border-white/10 space-y-3">
+                  <Link
+                    to="/profile"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="flex items-center space-x-3 py-2 px-4 text-white/80 hover:text-white transition-colors duration-300"
+                  >
+                    <User className="w-5 h-5" />
+                    <span>Profile</span>
+                  </Link>
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setIsMenuOpen(false);
+                    }}
+                    className="w-full flex items-center space-x-3 py-2 px-4 text-red-400 hover:text-red-300 transition-colors duration-300"
+                  >
+                    <LogOut className="w-5 h-5" />
+                    <span>Exit Portal</span>
+                  </button>
                 </div>
               </motion.div>
             )}
