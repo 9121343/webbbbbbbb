@@ -18,6 +18,7 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [scrolled, setScrolled] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [hoveredCategory, setHoveredCategory] = useState(null);
   const navigate = useNavigate();
 
   const { getTotalItems } = useCartStore();
@@ -45,7 +46,6 @@ const Header = () => {
   }, [showUserMenu]);
 
   useEffect(() => {
-    // Close mobile menu when screen size changes
     const handleResize = () => {
       if (window.innerWidth >= 768) {
         setIsMenuOpen(false);
@@ -56,7 +56,6 @@ const Header = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Close mobile menu on route changes
   useEffect(() => {
     setIsMenuOpen(false);
   }, [navigate]);
@@ -75,7 +74,6 @@ const Header = () => {
     navigate("/");
   };
 
-  // Prevent body scroll when mobile menu is open
   useEffect(() => {
     if (isMenuOpen) {
       document.body.style.overflow = "hidden";
@@ -207,7 +205,11 @@ const Header = () => {
               </motion.button>
 
               {/* Cart */}
-              <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+              <motion.div
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                id="cart-icon"
+              >
                 <Link
                   to="/cart"
                   className="relative p-2 lg:p-3 text-white/80 hover:text-neon-blue transition-colors duration-300 group"
@@ -325,39 +327,71 @@ const Header = () => {
             </div>
           </div>
 
-          {/* Desktop Navigation Menu */}
+          {/* Desktop Navigation Menu with Sliding Hover Effect */}
           <motion.nav
-            className="hidden lg:flex items-center justify-center space-x-8 py-4 border-t border-white/10"
+            className="hidden lg:flex items-center justify-center py-4 border-t border-white/10 relative"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
           >
-            {categories.map((category, index) => (
-              <motion.div
-                key={category.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 + index * 0.1 }}
-                whileHover={{ scale: 1.05 }}
-              >
-                <Link
-                  to={`/category/${category.id}`}
-                  className="group flex items-center space-x-3 text-white/80 hover:text-white transition-all duration-300 px-4 py-2 rounded-xl hover:bg-white/10 backdrop-blur-sm relative"
+            {/* Sliding Background */}
+            <AnimatePresence>
+              {hoveredCategory && (
+                <motion.div
+                  className="absolute bg-gradient-to-r from-neon-pink/20 to-neon-purple/20 rounded-xl border border-neon-cyan/30"
+                  layoutId="navbar-hover"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                  style={{
+                    left: hoveredCategory.left,
+                    top: hoveredCategory.top,
+                    width: hoveredCategory.width,
+                    height: hoveredCategory.height,
+                  }}
+                />
+              )}
+            </AnimatePresence>
+
+            <div className="flex items-center space-x-8 relative">
+              {categories.map((category, index) => (
+                <motion.div
+                  key={category.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 + index * 0.1 }}
+                  onMouseEnter={(e) => {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    const parentRect =
+                      e.currentTarget.parentElement.getBoundingClientRect();
+                    setHoveredCategory({
+                      left: rect.left - parentRect.left - 8,
+                      top: -8,
+                      width: rect.width + 16,
+                      height: rect.height + 16,
+                    });
+                  }}
+                  onMouseLeave={() => setHoveredCategory(null)}
                 >
-                  <motion.span
-                    className="text-xl lg:text-2xl"
-                    whileHover={{ scale: 1.2, rotate: 10 }}
-                    transition={{ type: "spring", stiffness: 300 }}
+                  <Link
+                    to={`/category/${category.id}`}
+                    className="group flex items-center space-x-3 text-white/80 hover:text-white transition-all duration-300 px-4 py-2 rounded-xl relative z-10"
                   >
-                    {category.icon}
-                  </motion.span>
-                  <span className="font-medium group-hover:text-neon-cyan transition-colors duration-300">
-                    {category.name}
-                  </span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-neon-pink/20 to-neon-purple/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
-                </Link>
-              </motion.div>
-            ))}
+                    <motion.span
+                      className="text-xl lg:text-2xl"
+                      whileHover={{ scale: 1.2, rotate: 10 }}
+                      transition={{ type: "spring", stiffness: 300 }}
+                    >
+                      {category.icon}
+                    </motion.span>
+                    <span className="font-medium group-hover:text-neon-cyan transition-colors duration-300">
+                      {category.name}
+                    </span>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
           </motion.nav>
         </div>
       </motion.header>
