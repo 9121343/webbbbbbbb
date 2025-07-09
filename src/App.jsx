@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
+import { motion, AnimatePresence } from "framer-motion";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import HomePage from "./pages/HomePage";
@@ -15,22 +16,207 @@ import SearchPage from "./pages/SearchPage";
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-dark-100 text-white relative overflow-x-hidden">
+        {/* Global Background Effects */}
+        <div className="fixed inset-0 bg-mesh animate-gradient-xy opacity-10 pointer-events-none" />
+        <div className="fixed inset-0 cyber-grid opacity-5 pointer-events-none" />
+
+        {/* Floating Quantum Orbs */}
+        <div className="fixed inset-0 pointer-events-none overflow-hidden">
+          {[...Array(15)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute rounded-full opacity-10"
+              style={{
+                background: `radial-gradient(circle, ${
+                  ["#ff006e", "#8338ec", "#3a86ff", "#06ffa5", "#ffbe0b"][i % 5]
+                } 0%, transparent 70%)`,
+                width: Math.random() * 150 + 50,
+                height: Math.random() * 150 + 50,
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                filter: "blur(3px)",
+              }}
+              animate={{
+                x: [0, Math.random() * 400 - 200],
+                y: [0, Math.random() * 400 - 200],
+                scale: [1, 1.2, 1],
+                opacity: [0.05, 0.15, 0.05],
+              }}
+              transition={{
+                duration: Math.random() * 20 + 20,
+                repeat: Infinity,
+                ease: "linear",
+              }}
+            />
+          ))}
+        </div>
+
         <Header />
-        <main className="min-h-screen">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/category/:categoryId" element={<CategoryPage />} />
-            <Route path="/product/:productId" element={<ProductPage />} />
-            <Route path="/customize/:productId" element={<CustomizePage />} />
-            <Route path="/cart" element={<CartPage />} />
-            <Route path="/checkout" element={<CheckoutPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/search" element={<SearchPage />} />
-          </Routes>
-        </main>
+
+        <motion.main
+          className="min-h-screen relative z-10"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <AnimatePresence mode="wait">
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <motion.div
+                    key="home"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <HomePage />
+                  </motion.div>
+                }
+              />
+              <Route
+                path="/category/:categoryId"
+                element={
+                  <motion.div
+                    key="category"
+                    initial={{ opacity: 0, x: 100 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -100 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <CategoryPage />
+                  </motion.div>
+                }
+              />
+              <Route
+                path="/product/:productId"
+                element={
+                  <motion.div
+                    key="product"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 1.05 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <ProductPage />
+                  </motion.div>
+                }
+              />
+              <Route
+                path="/customize/:productId"
+                element={
+                  <motion.div
+                    key="customize"
+                    initial={{ opacity: 0, rotateY: 90 }}
+                    animate={{ opacity: 1, rotateY: 0 }}
+                    exit={{ opacity: 0, rotateY: -90 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <CustomizePage />
+                  </motion.div>
+                }
+              />
+              <Route
+                path="/cart"
+                element={
+                  <motion.div
+                    key="cart"
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -50 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <CartPage />
+                  </motion.div>
+                }
+              />
+              <Route
+                path="/checkout"
+                element={
+                  <motion.div
+                    key="checkout"
+                    initial={{ opacity: 0, x: -100 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 100 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <CheckoutPage />
+                  </motion.div>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <motion.div
+                    key="profile"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 1.1 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <ProfilePage />
+                  </motion.div>
+                }
+              />
+              <Route
+                path="/search"
+                element={
+                  <motion.div
+                    key="search"
+                    initial={{ opacity: 0, y: -50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 50 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <SearchPage />
+                  </motion.div>
+                }
+              />
+            </Routes>
+          </AnimatePresence>
+        </motion.main>
+
         <Footer />
-        <Toaster position="top-right" />
+
+        {/* Enhanced Toast Notifications */}
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            duration: 3000,
+            style: {
+              background: "rgba(26, 26, 46, 0.9)",
+              color: "#fff",
+              border: "1px solid rgba(255, 0, 110, 0.3)",
+              borderRadius: "16px",
+              backdropFilter: "blur(20px)",
+              boxShadow: "0 8px 32px 0 rgba(255, 0, 110, 0.2)",
+            },
+            success: {
+              iconTheme: {
+                primary: "#06ffa5",
+                secondary: "#fff",
+              },
+            },
+            error: {
+              iconTheme: {
+                primary: "#ff006e",
+                secondary: "#fff",
+              },
+            },
+          }}
+        />
+
+        {/* Quantum Loading Indicator */}
+        <motion.div
+          className="fixed bottom-8 right-8 pointer-events-none z-50"
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 2 }}
+        >
+          <div className="w-2 h-2 bg-neon-cyan rounded-full animate-pulse shadow-neon-blue" />
+        </motion.div>
       </div>
     </Router>
   );
