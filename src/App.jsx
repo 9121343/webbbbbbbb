@@ -6,7 +6,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useUserStore } from "./store/useStore";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -93,210 +93,122 @@ function App() {
   return (
     <Router>
       <div className="min-h-screen">
-        <AnimatePresence mode="wait">
-          <Routes>
-            {/* Public Landing Page - No Layout */}
-            <Route
-              path="/"
-              element={
-                isAuthenticated ? (
-                  <Navigate to="/home" replace />
-                ) : (
-                  <motion.div
-                    key="landing"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <LandingPage />
-                  </motion.div>
-                )
-              }
-            />
+        <Routes>
+          {/* Public Landing Page - No Layout */}
+          <Route
+            path="/"
+            element={
+              isAuthenticated ? (
+                <Navigate to="/home" replace />
+              ) : (
+                <LandingPage />
+              )
+            }
+          />
 
-            {/* Login Page - No Layout */}
-            <Route
-              path="/login"
-              element={
-                isAuthenticated ? (
-                  <Navigate to="/home" replace />
-                ) : (
-                  <motion.div
-                    key="login"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <LoginPage />
-                  </motion.div>
-                )
-              }
-            />
+          {/* Login Page - No Layout */}
+          <Route
+            path="/login"
+            element={
+              isAuthenticated ? <Navigate to="/home" replace /> : <LoginPage />
+            }
+          />
 
-            {/* Protected Routes - With Layout */}
-            <Route
-              path="/home"
-              element={
-                <ProtectedRoute>
-                  <MainLayout>
-                    <motion.div
-                      key="home"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <HomePage />
-                    </motion.div>
-                  </MainLayout>
-                </ProtectedRoute>
-              }
-            />
+          {/* Protected Routes - With Layout */}
+          <Route
+            path="/home"
+            element={
+              <ProtectedRoute>
+                <MainLayout>
+                  <HomePage />
+                </MainLayout>
+              </ProtectedRoute>
+            }
+          />
 
-            <Route
-              path="/category/:categoryId"
-              element={
-                <ProtectedRoute>
-                  <MainLayout>
-                    <motion.div
-                      key="category"
-                      initial={{ opacity: 0, x: 100 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -100 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <CategoryPage />
-                    </motion.div>
-                  </MainLayout>
-                </ProtectedRoute>
-              }
-            />
+          <Route
+            path="/category/:categoryId"
+            element={
+              <ProtectedRoute>
+                <MainLayout>
+                  <CategoryPage />
+                </MainLayout>
+              </ProtectedRoute>
+            }
+          />
 
-            <Route
-              path="/product/:productId"
-              element={
-                <ProtectedRoute>
-                  <MainLayout>
-                    <motion.div
-                      key="product"
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 1.05 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <ProductPage />
-                    </motion.div>
-                  </MainLayout>
-                </ProtectedRoute>
-              }
-            />
+          <Route
+            path="/product/:productId"
+            element={
+              <ProtectedRoute>
+                <MainLayout>
+                  <ProductPage />
+                </MainLayout>
+              </ProtectedRoute>
+            }
+          />
 
-            <Route
-              path="/customize/:productId"
-              element={
-                <ProtectedRoute>
-                  <MainLayout>
-                    <motion.div
-                      key="customize"
-                      initial={{ opacity: 0, rotateY: 90 }}
-                      animate={{ opacity: 1, rotateY: 0 }}
-                      exit={{ opacity: 0, rotateY: -90 }}
-                      transition={{ duration: 0.5 }}
-                    >
-                      <CustomizePage />
-                    </motion.div>
-                  </MainLayout>
-                </ProtectedRoute>
-              }
-            />
+          <Route
+            path="/customize/:productId"
+            element={
+              <ProtectedRoute>
+                <MainLayout>
+                  <CustomizePage />
+                </MainLayout>
+              </ProtectedRoute>
+            }
+          />
 
-            <Route
-              path="/cart"
-              element={
-                <ProtectedRoute>
-                  <MainLayout>
-                    <motion.div
-                      key="cart"
-                      initial={{ opacity: 0, y: 50 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -50 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <CartPage />
-                    </motion.div>
-                  </MainLayout>
-                </ProtectedRoute>
-              }
-            />
+          <Route
+            path="/cart"
+            element={
+              <ProtectedRoute>
+                <MainLayout>
+                  <CartPage />
+                </MainLayout>
+              </ProtectedRoute>
+            }
+          />
 
-            <Route
-              path="/checkout"
-              element={
-                <ProtectedRoute>
-                  <MainLayout>
-                    <motion.div
-                      key="checkout"
-                      initial={{ opacity: 0, x: -100 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: 100 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <CheckoutPage />
-                    </motion.div>
-                  </MainLayout>
-                </ProtectedRoute>
-              }
-            />
+          <Route
+            path="/checkout"
+            element={
+              <ProtectedRoute>
+                <MainLayout>
+                  <CheckoutPage />
+                </MainLayout>
+              </ProtectedRoute>
+            }
+          />
 
-            <Route
-              path="/profile"
-              element={
-                <ProtectedRoute>
-                  <MainLayout>
-                    <motion.div
-                      key="profile"
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 1.1 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <ProfilePage />
-                    </motion.div>
-                  </MainLayout>
-                </ProtectedRoute>
-              }
-            />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <MainLayout>
+                  <ProfilePage />
+                </MainLayout>
+              </ProtectedRoute>
+            }
+          />
 
-            <Route
-              path="/search"
-              element={
-                <ProtectedRoute>
-                  <MainLayout>
-                    <motion.div
-                      key="search"
-                      initial={{ opacity: 0, y: -50 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 50 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <SearchPage />
-                    </motion.div>
-                  </MainLayout>
-                </ProtectedRoute>
-              }
-            />
+          <Route
+            path="/search"
+            element={
+              <ProtectedRoute>
+                <MainLayout>
+                  <SearchPage />
+                </MainLayout>
+              </ProtectedRoute>
+            }
+          />
 
-            {/* Catch all route */}
-            <Route
-              path="*"
-              element={
-                <Navigate to={isAuthenticated ? "/home" : "/"} replace />
-              }
-            />
-          </Routes>
-        </AnimatePresence>
+          {/* Catch all route */}
+          <Route
+            path="*"
+            element={<Navigate to={isAuthenticated ? "/home" : "/"} replace />}
+          />
+        </Routes>
 
         {/* Enhanced Toast Notifications */}
         <Toaster
