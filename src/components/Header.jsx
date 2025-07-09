@@ -28,14 +28,44 @@ const Header = () => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
     };
+
+    const handleClickOutside = (event) => {
+      if (showUserMenu && !event.target.closest(".user-menu-container")) {
+        setShowUserMenu(false);
+      }
+    };
+
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [showUserMenu]);
+
+  useEffect(() => {
+    // Close mobile menu when screen size changes
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  // Close mobile menu on route changes
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [navigate]);
 
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
+      setIsMenuOpen(false);
     }
   };
 
@@ -45,20 +75,26 @@ const Header = () => {
     navigate("/");
   };
 
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isMenuOpen]);
+
   return (
     <>
-      {/* Floating Orbs Background */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="floating-orb w-32 h-32 top-10 left-10 animate-delay-100"></div>
-        <div className="floating-orb w-24 h-24 top-32 right-20 animate-delay-200"></div>
-        <div className="floating-orb w-16 h-16 top-64 left-1/4 animate-delay-300"></div>
-      </div>
-
       <motion.header
         className={`fixed top-0 w-full z-50 transition-all duration-500 ${
           scrolled
-            ? "bg-dark-100/80 backdrop-blur-xl border-b border-neon-pink/30 shadow-neon"
-            : "bg-transparent"
+            ? "bg-dark-100/95 backdrop-blur-xl border-b border-neon-pink/30 shadow-cyber"
+            : "bg-dark-100/80 backdrop-blur-md"
         }`}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
@@ -77,9 +113,12 @@ const Header = () => {
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
           >
             <Zap className="w-4 h-4" />
-            <span>
+            <span className="hidden sm:inline">
               ⚡ Revolutionary 3D Customization • Free Shipping Worldwide •
               AI-Powered Designs ⚡
+            </span>
+            <span className="sm:hidden">
+              ⚡ Free Shipping • AI-Powered Designs ⚡
             </span>
             <Zap className="w-4 h-4" />
           </motion.span>
@@ -87,10 +126,17 @@ const Header = () => {
 
         {/* Main Header */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
+          <div className="flex items-center justify-between h-16 lg:h-20">
             {/* Logo */}
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link to="/home" className="flex items-center space-x-3 group">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="flex-shrink-0 z-50"
+            >
+              <Link
+                to="/home"
+                className="flex items-center space-x-2 lg:space-x-3 group"
+              >
                 <motion.div
                   className="relative"
                   animate={{
@@ -102,28 +148,28 @@ const Header = () => {
                     scale: { duration: 2, repeat: Infinity, ease: "easeInOut" },
                   }}
                 >
-                  <div className="w-12 h-12 bg-gradient-to-r from-neon-pink to-neon-purple rounded-2xl flex items-center justify-center shadow-neon">
-                    <span className="text-white font-display font-black text-xl">
+                  <div className="w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-r from-neon-pink to-neon-purple rounded-xl lg:rounded-2xl flex items-center justify-center shadow-neon">
+                    <span className="text-white font-display font-black text-lg lg:text-xl">
                       S
                     </span>
                   </div>
-                  <div className="absolute inset-0 bg-gradient-to-r from-neon-blue to-neon-cyan rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse-neon"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-neon-blue to-neon-cyan rounded-xl lg:rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse-neon"></div>
                 </motion.div>
                 <div className="flex flex-col">
-                  <span className="text-2xl font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-neon-pink to-neon-purple group-hover:from-neon-blue group-hover:to-neon-cyan transition-all duration-300">
+                  <span className="text-xl lg:text-2xl font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-neon-pink to-neon-purple group-hover:from-neon-blue group-hover:to-neon-cyan transition-all duration-300">
                     STYLEXX
                   </span>
-                  <span className="text-xs text-gray-400 font-medium tracking-wider">
+                  <span className="text-xs text-gray-400 font-medium tracking-wider hidden lg:block">
                     3D FASHION REALM
                   </span>
                 </div>
               </Link>
             </motion.div>
 
-            {/* Search Bar */}
+            {/* Search Bar - Desktop */}
             <motion.form
               onSubmit={handleSearch}
-              className="hidden md:flex flex-1 max-w-lg mx-8"
+              className="hidden lg:flex flex-1 max-w-lg mx-8"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
@@ -149,10 +195,10 @@ const Header = () => {
             </motion.form>
 
             {/* Right Section */}
-            <div className="flex items-center space-x-6">
-              {/* Wishlist */}
+            <div className="flex items-center space-x-3 lg:space-x-6">
+              {/* Wishlist - Desktop */}
               <motion.button
-                className="relative p-3 text-white/80 hover:text-neon-pink transition-colors duration-300 group"
+                className="hidden lg:block relative p-3 text-white/80 hover:text-neon-pink transition-colors duration-300 group"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
               >
@@ -164,13 +210,13 @@ const Header = () => {
               <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
                 <Link
                   to="/cart"
-                  className="relative p-3 text-white/80 hover:text-neon-blue transition-colors duration-300 group"
+                  className="relative p-2 lg:p-3 text-white/80 hover:text-neon-blue transition-colors duration-300 group"
                 >
-                  <ShoppingCart className="w-6 h-6" />
+                  <ShoppingCart className="w-5 h-5 lg:w-6 lg:h-6" />
                   <AnimatePresence>
                     {getTotalItems() > 0 && (
                       <motion.span
-                        className="absolute -top-1 -right-1 bg-gradient-to-r from-neon-pink to-neon-purple text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold shadow-neon"
+                        className="absolute -top-1 -right-1 bg-gradient-to-r from-neon-pink to-neon-purple text-white text-xs rounded-full w-5 h-5 lg:w-6 lg:h-6 flex items-center justify-center font-bold shadow-neon"
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
                         exit={{ scale: 0 }}
@@ -189,18 +235,18 @@ const Header = () => {
               </motion.div>
 
               {/* User Account with Dropdown */}
-              <div className="relative">
+              <div className="relative user-menu-container">
                 <motion.button
                   onClick={() => setShowUserMenu(!showUserMenu)}
-                  className="flex items-center space-x-3 text-white/80 hover:text-neon-cyan transition-colors duration-300 group p-2 rounded-xl"
+                  className="flex items-center space-x-2 lg:space-x-3 text-white/80 hover:text-neon-cyan transition-colors duration-300 group p-2 rounded-xl"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
                   <div className="relative">
-                    <User className="w-6 h-6" />
+                    <User className="w-5 h-5 lg:w-6 lg:h-6" />
                     <div className="absolute inset-0 bg-neon-cyan/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse"></div>
                   </div>
-                  <span className="hidden sm:block text-sm font-medium">
+                  <span className="hidden sm:block text-sm font-medium truncate max-w-24 lg:max-w-none">
                     {user?.name || "Neural User"}
                   </span>
                 </motion.button>
@@ -216,8 +262,12 @@ const Header = () => {
                       transition={{ duration: 0.2 }}
                     >
                       <div className="p-4 border-b border-white/10">
-                        <p className="text-white font-medium">{user?.name}</p>
-                        <p className="text-white/60 text-sm">{user?.email}</p>
+                        <p className="text-white font-medium truncate">
+                          {user?.name}
+                        </p>
+                        <p className="text-white/60 text-sm truncate">
+                          {user?.email}
+                        </p>
                       </div>
                       <div className="py-2">
                         <Link
@@ -244,7 +294,7 @@ const Header = () => {
               {/* Mobile Menu Button */}
               <motion.button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="md:hidden p-3 text-white/80 hover:text-neon-pink transition-colors duration-300"
+                className="lg:hidden p-2 text-white/80 hover:text-neon-pink transition-colors duration-300 z-50 relative"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
               >
@@ -275,9 +325,9 @@ const Header = () => {
             </div>
           </div>
 
-          {/* Navigation Menu */}
+          {/* Desktop Navigation Menu */}
           <motion.nav
-            className="hidden md:flex items-center justify-center space-x-8 py-4 border-t border-white/10"
+            className="hidden lg:flex items-center justify-center space-x-8 py-4 border-t border-white/10"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
@@ -292,10 +342,10 @@ const Header = () => {
               >
                 <Link
                   to={`/category/${category.id}`}
-                  className="group flex items-center space-x-3 text-white/80 hover:text-white transition-all duration-300 px-4 py-2 rounded-xl hover:bg-white/10 backdrop-blur-sm"
+                  className="group flex items-center space-x-3 text-white/80 hover:text-white transition-all duration-300 px-4 py-2 rounded-xl hover:bg-white/10 backdrop-blur-sm relative"
                 >
                   <motion.span
-                    className="text-2xl"
+                    className="text-xl lg:text-2xl"
                     whileHover={{ scale: 1.2, rotate: 10 }}
                     transition={{ type: "spring", stiffness: 300 }}
                   >
@@ -309,78 +359,95 @@ const Header = () => {
               </motion.div>
             ))}
           </motion.nav>
-
-          {/* Mobile Menu */}
-          <AnimatePresence>
-            {isMenuOpen && (
-              <motion.div
-                className="md:hidden py-6 border-t border-white/10"
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                {/* Mobile Search */}
-                <form onSubmit={handleSearch} className="mb-6">
-                  <div className="relative">
-                    <input
-                      type="text"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="Search for futuristic styles..."
-                      className="w-full px-6 py-3 pl-14 bg-white/10 backdrop-blur-md border border-white/30 rounded-2xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-neon-pink"
-                    />
-                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/60 w-5 h-5" />
-                  </div>
-                </form>
-
-                {/* Mobile Categories */}
-                <div className="space-y-3">
-                  {categories.map((category, index) => (
-                    <motion.div
-                      key={category.id}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                    >
-                      <Link
-                        to={`/category/${category.id}`}
-                        onClick={() => setIsMenuOpen(false)}
-                        className="flex items-center space-x-4 py-3 px-4 text-white/80 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-300"
-                      >
-                        <span className="text-2xl">{category.icon}</span>
-                        <span className="font-medium">{category.name}</span>
-                      </Link>
-                    </motion.div>
-                  ))}
-                </div>
-
-                {/* Mobile User Actions */}
-                <div className="mt-6 pt-6 border-t border-white/10 space-y-3">
-                  <Link
-                    to="/profile"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="flex items-center space-x-3 py-2 px-4 text-white/80 hover:text-white transition-colors duration-300"
-                  >
-                    <User className="w-5 h-5" />
-                    <span>Profile</span>
-                  </Link>
-                  <button
-                    onClick={() => {
-                      handleLogout();
-                      setIsMenuOpen(false);
-                    }}
-                    className="w-full flex items-center space-x-3 py-2 px-4 text-red-400 hover:text-red-300 transition-colors duration-300"
-                  >
-                    <LogOut className="w-5 h-5" />
-                    <span>Exit Portal</span>
-                  </button>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
       </motion.header>
+
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            className="fixed inset-0 z-40 lg:hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {/* Backdrop */}
+            <div className="absolute inset-0 bg-dark-100/95 backdrop-blur-xl" />
+
+            {/* Menu Content */}
+            <motion.div
+              className="relative z-50 h-full overflow-y-auto pt-24 pb-8 px-4"
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 30, stiffness: 300 }}
+            >
+              {/* Mobile Search */}
+              <form onSubmit={handleSearch} className="mb-8">
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search for futuristic styles..."
+                    className="w-full px-6 py-4 pl-14 bg-white/10 backdrop-blur-md border border-white/30 rounded-2xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-neon-pink text-lg"
+                  />
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/60 w-6 h-6" />
+                </div>
+              </form>
+
+              {/* Mobile Categories */}
+              <div className="space-y-4 mb-8">
+                <h3 className="text-lg font-semibold text-white mb-4">
+                  Categories
+                </h3>
+                {categories.map((category, index) => (
+                  <motion.div
+                    key={category.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                  >
+                    <Link
+                      to={`/category/${category.id}`}
+                      onClick={() => setIsMenuOpen(false)}
+                      className="flex items-center space-x-4 py-4 px-4 text-white/80 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-300"
+                    >
+                      <span className="text-3xl">{category.icon}</span>
+                      <span className="font-medium text-lg">
+                        {category.name}
+                      </span>
+                    </Link>
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Mobile User Actions */}
+              <div className="pt-6 border-t border-white/10 space-y-4">
+                <Link
+                  to="/profile"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="flex items-center space-x-4 py-4 px-4 text-white/80 hover:text-white hover:bg-white/10 rounded-xl transition-colors duration-300"
+                >
+                  <User className="w-6 h-6" />
+                  <span className="text-lg">Profile</span>
+                </Link>
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setIsMenuOpen(false);
+                  }}
+                  className="w-full flex items-center space-x-4 py-4 px-4 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-xl transition-colors duration-300"
+                >
+                  <LogOut className="w-6 h-6" />
+                  <span className="text-lg">Exit Portal</span>
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 };
