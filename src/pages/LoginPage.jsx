@@ -252,7 +252,7 @@ const LoginPage = () => {
         </div>
 
         {/* Right Side - Authentication Portal */}
-        <div className="w-full lg:w-96 flex items-center justify-center p-8">
+        <div className="w-full lg:w-96 flex items-center justify-center p-4 sm:p-6 lg:p-8">
           <motion.div
             className="w-full max-w-md"
             initial={{ opacity: 0, x: 100 }}
