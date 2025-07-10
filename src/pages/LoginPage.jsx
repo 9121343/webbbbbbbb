@@ -204,11 +204,11 @@ const LoginPage = () => {
               animate={{ opacity: 1 }}
               transition={{ delay: 1 }}
             >
-              <Sparkles className="w-8 h-8 text-neon-cyan animate-pulse" />
+              <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-neon-cyan animate-pulse" />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan to-neon-blue">
                 THE FUTURE OF FASHION
               </span>
-              <Sparkles className="w-8 h-8 text-neon-cyan animate-pulse" />
+              <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-neon-cyan animate-pulse" />
             </motion.div>
 
             <motion.p
