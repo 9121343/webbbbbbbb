@@ -182,7 +182,7 @@ const LoginPage = () => {
             transition={{ duration: 1, delay: 0.5 }}
           >
             <motion.h1
-              className="text-6xl md:text-8xl font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-neon-pink via-neon-purple to-neon-blue leading-tight"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-neon-pink via-neon-purple to-neon-blue leading-tight"
               animate={{
                 backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
               }}
