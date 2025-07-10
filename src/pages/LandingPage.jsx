@@ -63,7 +63,9 @@ const FloatingLogo = () => {
 };
 
 const Scene3D = () => (
-  <Canvas camera={{ position: [0, 0, 8], fov: 60 }}>
+  <Canvas
+    camera={{ position: [0, 0, 8], fov: window.innerWidth < 768 ? 70 : 60 }}
+  >
     <Suspense fallback={null}>
       <ambientLight intensity={0.4} />
       <pointLight position={[10, 10, 10]} color="#ff006e" intensity={1} />
@@ -294,13 +296,13 @@ const LandingPage = () => {
 
         {/* Scroll Indicator */}
         <motion.div
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+          className="absolute bottom-4 sm:bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2"
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
-          <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center">
+          <div className="w-5 h-8 sm:w-6 sm:h-10 border-2 border-white/30 rounded-full flex justify-center">
             <motion.div
-              className="w-1 h-3 bg-neon-pink rounded-full mt-2"
+              className="w-1 h-2 sm:h-3 bg-neon-pink rounded-full mt-1 sm:mt-2"
               animate={{ opacity: [0, 1, 0] }}
               transition={{ duration: 2, repeat: Infinity }}
             />
