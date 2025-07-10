@@ -199,7 +199,7 @@ const LoginPage = () => {
             </motion.h1>
 
             <motion.div
-              className="flex items-center justify-center space-x-4 text-xl md:text-2xl font-bold text-white/80"
+              className="flex items-center justify-center space-x-2 sm:space-x-4 text-lg sm:text-xl md:text-2xl font-bold text-white/80"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1 }}
