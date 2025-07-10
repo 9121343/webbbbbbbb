@@ -63,27 +63,28 @@ const FloatingLogo = () => {
 };
 
 const Scene3D = () => {
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
 
   return (
     <Canvas camera={{ position: [0, 0, 8], fov: isMobile ? 70 : 60 }}>
       <Suspense fallback={null}>
-      <ambientLight intensity={0.4} />
-      <pointLight position={[10, 10, 10]} color="#ff006e" intensity={1} />
-      <pointLight position={[-10, -10, -10]} color="#8338ec" intensity={1} />
-      <FloatingLogo />
-      <Stars
-        radius={300}
-        depth={60}
-        count={1000}
-        factor={7}
-        saturation={0}
-        fade
-      />
-      <Environment preset="night" />
-    </Suspense>
-  </Canvas>
-);
+        <ambientLight intensity={0.4} />
+        <pointLight position={[10, 10, 10]} color="#ff006e" intensity={1} />
+        <pointLight position={[-10, -10, -10]} color="#8338ec" intensity={1} />
+        <FloatingLogo />
+        <Stars
+          radius={300}
+          depth={60}
+          count={1000}
+          factor={7}
+          saturation={0}
+          fade
+        />
+        <Environment preset="night" />
+      </Suspense>
+    </Canvas>
+  );
+};
 
 const LandingPage = () => {
   const { categories } = useProductStore();
@@ -174,20 +175,20 @@ const LandingPage = () => {
         ))}
       </div>
 
-            {/* Hero Section */}
+      {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center pt-16 sm:pt-20">
         <div className="absolute inset-0 z-0">
           <Scene3D />
         </div>
 
-                <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 100 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: "easeOut" }}
             className="space-y-8"
           >
-                        <motion.div className="space-y-4" style={{ y: y1 }}>
+            <motion.div className="space-y-4" style={{ y: y1 }}>
               <motion.h1
                 className="text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-neon-pink via-neon-purple to-neon-blue leading-tight"
                 animate={{
@@ -205,21 +206,21 @@ const LandingPage = () => {
                 STYLEXX
               </motion.h1>
 
-                            <motion.div
+              <motion.div
                 className="flex items-center justify-center space-x-2 sm:space-x-4 text-lg sm:text-xl md:text-2xl font-bold text-white/80"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
               >
-                                <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-neon-cyan animate-pulse" />
+                <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-neon-cyan animate-pulse" />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan to-neon-blue">
                   THE FUTURE OF FASHION
                 </span>
-                                <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-neon-cyan animate-pulse" />
+                <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-neon-cyan animate-pulse" />
               </motion.div>
             </motion.div>
 
-                        <motion.p
+            <motion.p
               className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/70 max-w-4xl mx-auto leading-relaxed px-4 sm:px-0"
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
@@ -232,7 +233,7 @@ const LandingPage = () => {
               . Your style, reimagined.
             </motion.p>
 
-                        <motion.div
+            <motion.div
               className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center pt-6 sm:pt-8"
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
@@ -244,11 +245,11 @@ const LandingPage = () => {
               >
                 <Link
                   to="/login"
-                                    className="btn-neon px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-bold flex items-center space-x-2 sm:space-x-3 group"
+                  className="btn-neon px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-bold flex items-center space-x-2 sm:space-x-3 group"
                 >
-                                    <LogIn className="w-5 h-5 sm:w-6 sm:h-6 group-hover:animate-bounce" />
+                  <LogIn className="w-5 h-5 sm:w-6 sm:h-6 group-hover:animate-bounce" />
                   <span>Sign In</span>
-                                    <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </motion.div>
 
@@ -258,16 +259,16 @@ const LandingPage = () => {
               >
                 <Link
                   to="/login"
-                                    className="btn-primary px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-bold flex items-center space-x-2 sm:space-x-3"
+                  className="btn-primary px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-bold flex items-center space-x-2 sm:space-x-3"
                 >
-                                    <UserPlus className="w-5 h-5 sm:w-6 sm:h-6" />
+                  <UserPlus className="w-5 h-5 sm:w-6 sm:h-6" />
                   <span>Create Account</span>
                 </Link>
               </motion.div>
             </motion.div>
 
             {/* Stats */}
-                        <motion.div
+            <motion.div
               className="grid grid-cols-3 gap-4 sm:gap-6 md:gap-8 pt-12 sm:pt-16 max-w-2xl mx-auto px-4 sm:px-0"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -283,7 +284,7 @@ const LandingPage = () => {
                   className="text-center"
                   whileHover={{ scale: 1.1 }}
                 >
-                                    <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-display font-black text-neon-cyan">
+                  <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-display font-black text-neon-cyan">
                     {stat.number}
                   </div>
                   <div className="text-white/60 text-xs sm:text-sm font-medium">
@@ -295,14 +296,14 @@ const LandingPage = () => {
           </motion.div>
         </div>
 
-                {/* Scroll Indicator */}
+        {/* Scroll Indicator */}
         <motion.div
           className="absolute bottom-4 sm:bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2"
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
-                    <div className="w-5 h-8 sm:w-6 sm:h-10 border-2 border-white/30 rounded-full flex justify-center">
-                        <motion.div
+          <div className="w-5 h-8 sm:w-6 sm:h-10 border-2 border-white/30 rounded-full flex justify-center">
+            <motion.div
               className="w-1 h-2 sm:h-3 bg-neon-pink rounded-full mt-1 sm:mt-2"
               animate={{ opacity: [0, 1, 0] }}
               transition={{ duration: 2, repeat: Infinity }}
@@ -311,29 +312,29 @@ const LandingPage = () => {
         </motion.div>
       </section>
 
-            {/* Features Section */}
+      {/* Features Section */}
       <section className="py-16 sm:py-20 md:py-24 relative">
         <motion.div
           className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
           style={{ y: y2 }}
         >
-                    <motion.div
+          <motion.div
             className="text-center mb-12 sm:mb-16 md:mb-20"
             initial={{ opacity: 0, y: 100 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-                        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-neon-cyan mb-6">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-neon-cyan mb-6">
               Quantum Features
             </h2>
-                        <p className="text-base sm:text-lg md:text-xl text-white/70 max-w-3xl mx-auto px-4 sm:px-0">
+            <p className="text-base sm:text-lg md:text-xl text-white/70 max-w-3xl mx-auto px-4 sm:px-0">
               Experience next-generation technology that transforms how you
               create and customize fashion
             </p>
           </motion.div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             {[
               {
                 icon: Cpu,
@@ -370,7 +371,7 @@ const LandingPage = () => {
                   transition: { duration: 0.3 },
                 }}
               >
-                                <div className="card-dark p-6 sm:p-8 h-full relative overflow-hidden">
+                <div className="card-dark p-6 sm:p-8 h-full relative overflow-hidden">
                   <div
                     className={`absolute inset-0 bg-gradient-to-r ${feature.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}
                   />
@@ -383,7 +384,7 @@ const LandingPage = () => {
                     <feature.icon className="w-8 h-8 text-white" />
                   </motion.div>
 
-                                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 group-hover:text-neon-cyan transition-colors duration-300">
+                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 group-hover:text-neon-cyan transition-colors duration-300">
                     {feature.title}
                   </h3>
                   <p className="text-white/70 leading-relaxed group-hover:text-white/90 transition-colors duration-300">
@@ -399,25 +400,25 @@ const LandingPage = () => {
         </motion.div>
       </section>
 
-            {/* Categories Section */}
+      {/* Categories Section */}
       <section className="py-16 sm:py-20 md:py-24 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <motion.div
+          <motion.div
             className="text-center mb-12 sm:mb-16 md:mb-20"
             initial={{ opacity: 0, y: 100 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-                        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-neon-pink to-neon-purple mb-6">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-neon-pink to-neon-purple mb-6">
               Fashion Realms
             </h2>
-                        <p className="text-base sm:text-lg md:text-xl text-white/70 px-4 sm:px-0">
+            <p className="text-base sm:text-lg md:text-xl text-white/70 px-4 sm:px-0">
               Explore infinite dimensions of style and creativity
             </p>
           </motion.div>
 
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4 sm:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4 sm:gap-6">
             {categories.map((category, index) => (
               <motion.div
                 key={category.id}
@@ -437,8 +438,8 @@ const LandingPage = () => {
                 }}
               >
                 <div className="group block relative">
-                                    <div className="card-dark p-4 sm:p-6 text-center h-full relative overflow-hidden">
-                                        <motion.div
+                  <div className="card-dark p-4 sm:p-6 text-center h-full relative overflow-hidden">
+                    <motion.div
                       className="text-3xl sm:text-4xl md:text-5xl mb-3 sm:mb-4"
                       whileHover={{
                         scale: 1.3,
@@ -448,7 +449,7 @@ const LandingPage = () => {
                     >
                       {category.icon}
                     </motion.div>
-                                        <h3 className="font-bold text-white group-hover:text-neon-cyan transition-colors duration-300 text-xs sm:text-sm">
+                    <h3 className="font-bold text-white group-hover:text-neon-cyan transition-colors duration-300 text-xs sm:text-sm">
                       {category.name}
                     </h3>
 
@@ -463,7 +464,7 @@ const LandingPage = () => {
         </div>
       </section>
 
-            {/* Featured Products */}
+      {/* Featured Products */}
       <section className="py-16 sm:py-20 md:py-24 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-20">
@@ -473,7 +474,7 @@ const LandingPage = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
             >
-                            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan to-neon-blue mb-4">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan to-neon-blue mb-4">
                 Quantum Collection
               </h2>
               <p className="text-base sm:text-lg md:text-xl text-white/70">
@@ -497,7 +498,7 @@ const LandingPage = () => {
             </motion.div>
           </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {featuredProducts.map((product, index) => (
               <motion.div
                 key={product.id}
@@ -518,7 +519,7 @@ const LandingPage = () => {
         </div>
       </section>
 
-            {/* CTA Section */}
+      {/* CTA Section */}
       <section className="py-20 sm:py-24 md:py-32 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-neon-pink via-neon-purple to-neon-blue opacity-20" />
         <div className="absolute inset-0 bg-mesh animate-gradient-xy opacity-40" />
@@ -530,7 +531,7 @@ const LandingPage = () => {
             viewport={{ once: true }}
             transition={{ duration: 1 }}
           >
-                        <motion.h2
+            <motion.h2
               className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-neon-cyan mb-8"
               animate={{
                 backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
@@ -547,7 +548,7 @@ const LandingPage = () => {
               Ready to Transcend?
             </motion.h2>
 
-                        <p className="text-lg sm:text-xl md:text-2xl text-white/80 mb-8 sm:mb-12 leading-relaxed px-4 sm:px-0">
+            <p className="text-lg sm:text-xl md:text-2xl text-white/80 mb-8 sm:mb-12 leading-relaxed px-4 sm:px-0">
               Join the revolution. Design beyond reality.
               <br />
               <span className="text-neon-cyan font-bold">
@@ -568,11 +569,11 @@ const LandingPage = () => {
               >
                 <Link
                   to="/login"
-                                    className="inline-flex items-center bg-gradient-to-r from-neon-pink to-neon-purple hover:from-neon-purple hover:to-neon-blue text-white px-8 sm:px-12 py-4 sm:py-6 rounded-2xl font-bold text-lg sm:text-xl shadow-neon transition-all duration-300 group"
+                  className="inline-flex items-center bg-gradient-to-r from-neon-pink to-neon-purple hover:from-neon-purple hover:to-neon-blue text-white px-8 sm:px-12 py-4 sm:py-6 rounded-2xl font-bold text-lg sm:text-xl shadow-neon transition-all duration-300 group"
                 >
-                                    <Rocket className="mr-3 sm:mr-4 w-6 h-6 sm:w-8 sm:h-8 group-hover:animate-bounce" />
+                  <Rocket className="mr-3 sm:mr-4 w-6 h-6 sm:w-8 sm:h-8 group-hover:animate-bounce" />
                   Enter the Matrix
-                                    <ArrowRight className="ml-3 sm:ml-4 w-6 h-6 sm:w-8 sm:h-8 group-hover:translate-x-2 transition-transform duration-300" />
+                  <ArrowRight className="ml-3 sm:ml-4 w-6 h-6 sm:w-8 sm:h-8 group-hover:translate-x-2 transition-transform duration-300" />
                 </Link>
               </motion.div>
             </motion.div>
