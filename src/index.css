@@ -186,6 +186,34 @@
   color: white;
 }
 
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  .text-shadow-mobile {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  .btn-neon,
+  .btn-primary,
+  .btn-secondary {
+    @apply text-sm;
+  }
+
+  /* Reduce floating orb blur on mobile for performance */
+  .floating-orb {
+    filter: blur(0.5px);
+  }
+
+  /* Smaller cyber grid on mobile */
+  .cyber-grid {
+    background-size: 30px 30px;
+  }
+
+  /* Reduce backdrop blur on mobile for performance */
+  .glass-morphism {
+    backdrop-filter: blur(5px);
+  }
+}
+
 /* Loading animations */
 @keyframes shimmer {
   0% {
