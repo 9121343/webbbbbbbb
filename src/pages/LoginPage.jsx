@@ -166,11 +166,11 @@ const LoginPage = () => {
         />
       ))}
 
-      <div className="relative z-10 min-h-screen flex">
+      <div className="relative z-10 min-h-screen flex flex-col lg:flex-row">
         {/* Left Side - 3D Scene & Branding */}
-        <div className="flex-1 flex flex-col justify-center items-center p-8 lg:p-16">
+        <div className="flex-1 flex flex-col justify-center items-center p-4 sm:p-8 lg:p-16">
           {/* 3D Scene */}
-          <div className="w-full max-w-2xl h-96 mb-8">
+          <div className="w-full max-w-2xl h-64 sm:h-80 lg:h-96 mb-6 lg:mb-8">
             <Scene3D />
           </div>
 
