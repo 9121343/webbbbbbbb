@@ -224,7 +224,7 @@ const LoginPage = () => {
 
             {/* Features Preview */}
             <motion.div
-              className="grid grid-cols-3 gap-6 pt-8 max-w-xl mx-auto"
+              className="grid grid-cols-3 gap-4 sm:gap-6 pt-6 sm:pt-8 max-w-xl mx-auto"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.5 }}
