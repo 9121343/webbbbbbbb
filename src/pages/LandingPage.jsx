@@ -172,7 +172,7 @@ const LandingPage = () => {
       </div>
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center pt-20">
+      <section className="relative min-h-screen flex items-center justify-center pt-16 sm:pt-20">
         <div className="absolute inset-0 z-0">
           <Scene3D />
         </div>
@@ -186,7 +186,7 @@ const LandingPage = () => {
           >
             <motion.div className="space-y-4" style={{ y: y1 }}>
               <motion.h1
-                className="text-6xl md:text-8xl lg:text-9xl font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-neon-pink via-neon-purple to-neon-blue leading-tight"
+                className="text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-neon-pink via-neon-purple to-neon-blue leading-tight"
                 animate={{
                   backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
                 }}
@@ -203,21 +203,21 @@ const LandingPage = () => {
               </motion.h1>
 
               <motion.div
-                className="flex items-center justify-center space-x-4 text-xl md:text-2xl font-bold text-white/80"
+                className="flex items-center justify-center space-x-2 sm:space-x-4 text-lg sm:text-xl md:text-2xl font-bold text-white/80"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
               >
-                <Sparkles className="w-8 h-8 text-neon-cyan animate-pulse" />
+                <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-neon-cyan animate-pulse" />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan to-neon-blue">
                   THE FUTURE OF FASHION
                 </span>
-                <Sparkles className="w-8 h-8 text-neon-cyan animate-pulse" />
+                <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-neon-cyan animate-pulse" />
               </motion.div>
             </motion.div>
 
             <motion.p
-              className="text-xl md:text-2xl text-white/70 max-w-4xl mx-auto leading-relaxed"
+              className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/70 max-w-4xl mx-auto leading-relaxed px-4 sm:px-0"
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8, duration: 0.8 }}
@@ -265,7 +265,7 @@ const LandingPage = () => {
 
             {/* Stats */}
             <motion.div
-              className="grid grid-cols-3 gap-8 pt-16 max-w-2xl mx-auto"
+              className="grid grid-cols-3 gap-4 sm:gap-6 md:gap-8 pt-12 sm:pt-16 max-w-2xl mx-auto px-4 sm:px-0"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.5 }}
@@ -280,10 +280,10 @@ const LandingPage = () => {
                   className="text-center"
                   whileHover={{ scale: 1.1 }}
                 >
-                  <div className="text-3xl md:text-4xl font-display font-black text-neon-cyan">
+                  <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-display font-black text-neon-cyan">
                     {stat.number}
                   </div>
-                  <div className="text-white/60 text-sm font-medium">
+                  <div className="text-white/60 text-xs sm:text-sm font-medium">
                     {stat.label}
                   </div>
                 </motion.div>
@@ -321,16 +321,16 @@ const LandingPage = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <h2 className="text-5xl md:text-6xl font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-neon-cyan mb-6">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-neon-cyan mb-6">
               Quantum Features
             </h2>
-            <p className="text-xl text-white/70 max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl text-white/70 max-w-3xl mx-auto px-4 sm:px-0">
               Experience next-generation technology that transforms how you
               create and customize fashion
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             {[
               {
                 icon: Cpu,
@@ -367,7 +367,7 @@ const LandingPage = () => {
                   transition: { duration: 0.3 },
                 }}
               >
-                <div className="card-dark p-8 h-full relative overflow-hidden">
+                <div className="card-dark p-6 sm:p-8 h-full relative overflow-hidden">
                   <div
                     className={`absolute inset-0 bg-gradient-to-r ${feature.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}
                   />
@@ -380,7 +380,7 @@ const LandingPage = () => {
                     <feature.icon className="w-8 h-8 text-white" />
                   </motion.div>
 
-                  <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-neon-cyan transition-colors duration-300">
+                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 group-hover:text-neon-cyan transition-colors duration-300">
                     {feature.title}
                   </h3>
                   <p className="text-white/70 leading-relaxed group-hover:text-white/90 transition-colors duration-300">
@@ -406,15 +406,15 @@ const LandingPage = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <h2 className="text-5xl md:text-6xl font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-neon-pink to-neon-purple mb-6">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-neon-pink to-neon-purple mb-6">
               Fashion Realms
             </h2>
-            <p className="text-xl text-white/70">
+            <p className="text-base sm:text-lg md:text-xl text-white/70 px-4 sm:px-0">
               Explore infinite dimensions of style and creativity
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4 sm:gap-6">
             {categories.map((category, index) => (
               <motion.div
                 key={category.id}
@@ -434,9 +434,9 @@ const LandingPage = () => {
                 }}
               >
                 <div className="group block relative">
-                  <div className="card-dark p-6 text-center h-full relative overflow-hidden">
+                  <div className="card-dark p-4 sm:p-6 text-center h-full relative overflow-hidden">
                     <motion.div
-                      className="text-5xl mb-4"
+                      className="text-3xl sm:text-4xl md:text-5xl mb-3 sm:mb-4"
                       whileHover={{
                         scale: 1.3,
                         rotate: [0, -10, 10, 0],
@@ -445,7 +445,7 @@ const LandingPage = () => {
                     >
                       {category.icon}
                     </motion.div>
-                    <h3 className="font-bold text-white group-hover:text-neon-cyan transition-colors duration-300 text-sm">
+                    <h3 className="font-bold text-white group-hover:text-neon-cyan transition-colors duration-300 text-xs sm:text-sm">
                       {category.name}
                     </h3>
 
@@ -470,10 +470,10 @@ const LandingPage = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
             >
-              <h2 className="text-5xl md:text-6xl font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan to-neon-blue mb-4">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan to-neon-blue mb-4">
                 Quantum Collection
               </h2>
-              <p className="text-xl text-white/70">
+              <p className="text-base sm:text-lg md:text-xl text-white/70">
                 Handpicked designs from the metaverse
               </p>
             </motion.div>
@@ -494,7 +494,7 @@ const LandingPage = () => {
             </motion.div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {featuredProducts.map((product, index) => (
               <motion.div
                 key={product.id}
@@ -528,7 +528,7 @@ const LandingPage = () => {
             transition={{ duration: 1 }}
           >
             <motion.h2
-              className="text-6xl md:text-7xl font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-neon-cyan mb-8"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-neon-cyan mb-8"
               animate={{
                 backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
               }}
@@ -544,7 +544,7 @@ const LandingPage = () => {
               Ready to Transcend?
             </motion.h2>
 
-            <p className="text-2xl text-white/80 mb-12 leading-relaxed">
+            <p className="text-lg sm:text-xl md:text-2xl text-white/80 mb-8 sm:mb-12 leading-relaxed px-4 sm:px-0">
               Join the revolution. Design beyond reality.
               <br />
               <span className="text-neon-cyan font-bold">
@@ -565,11 +565,11 @@ const LandingPage = () => {
               >
                 <Link
                   to="/login"
-                  className="inline-flex items-center bg-gradient-to-r from-neon-pink to-neon-purple hover:from-neon-purple hover:to-neon-blue text-white px-12 py-6 rounded-2xl font-bold text-xl shadow-neon transition-all duration-300 group"
+                  className="inline-flex items-center bg-gradient-to-r from-neon-pink to-neon-purple hover:from-neon-purple hover:to-neon-blue text-white px-8 sm:px-12 py-4 sm:py-6 rounded-2xl font-bold text-lg sm:text-xl shadow-neon transition-all duration-300 group"
                 >
-                  <Rocket className="mr-4 w-8 h-8 group-hover:animate-bounce" />
+                  <Rocket className="mr-3 sm:mr-4 w-6 h-6 sm:w-8 sm:h-8 group-hover:animate-bounce" />
                   Enter the Matrix
-                  <ArrowRight className="ml-4 w-8 h-8 group-hover:translate-x-2 transition-transform duration-300" />
+                  <ArrowRight className="ml-3 sm:ml-4 w-6 h-6 sm:w-8 sm:h-8 group-hover:translate-x-2 transition-transform duration-300" />
                 </Link>
               </motion.div>
             </motion.div>
