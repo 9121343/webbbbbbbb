@@ -265,9 +265,9 @@ const LoginPage = () => {
 
               <div className="relative z-10">
                 {/* Portal Header */}
-                <div className="text-center mb-8">
+                <div className="text-center mb-6 sm:mb-8">
                   <motion.div
-                    className="w-16 h-16 bg-gradient-to-r from-neon-cyan to-neon-blue rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-neon-blue"
+                    className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-neon-cyan to-neon-blue rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-neon-blue"
                     animate={{ rotate: [0, 360] }}
                     transition={{
                       duration: 20,
