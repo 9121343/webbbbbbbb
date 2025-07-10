@@ -259,7 +259,7 @@ const LoginPage = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
           >
-            <div className="card-dark p-8 relative overflow-hidden">
+            <div className="card-dark p-6 sm:p-8 relative overflow-hidden">
               {/* Background Effect */}
               <div className="absolute inset-0 bg-gradient-to-br from-neon-pink/10 via-neon-purple/10 to-neon-blue/10" />
 
