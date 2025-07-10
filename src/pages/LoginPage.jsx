@@ -239,10 +239,10 @@ const LoginPage = () => {
                   className="text-center"
                   whileHover={{ scale: 1.1 }}
                 >
-                  <div className="w-12 h-12 bg-gradient-to-r from-neon-pink to-neon-purple rounded-xl flex items-center justify-center mx-auto mb-2 shadow-neon">
-                    <feature.icon className="w-6 h-6 text-white" />
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-neon-pink to-neon-purple rounded-xl flex items-center justify-center mx-auto mb-2 shadow-neon">
+                    <feature.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                   </div>
-                  <p className="text-white/60 text-sm font-medium">
+                  <p className="text-white/60 text-xs sm:text-sm font-medium">
                     {feature.text}
                   </p>
                 </motion.div>
