@@ -230,7 +230,7 @@ const LandingPage = () => {
             </motion.p>
 
             <motion.div
-              className="flex flex-col sm:flex-row gap-6 justify-center items-center pt-8"
+              className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center pt-6 sm:pt-8"
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.2 }}
@@ -241,11 +241,11 @@ const LandingPage = () => {
               >
                 <Link
                   to="/login"
-                  className="btn-neon px-8 py-4 text-lg font-bold flex items-center space-x-3 group"
+                  className="btn-neon px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-bold flex items-center space-x-2 sm:space-x-3 group"
                 >
-                  <LogIn className="w-6 h-6 group-hover:animate-bounce" />
+                  <LogIn className="w-5 h-5 sm:w-6 sm:h-6 group-hover:animate-bounce" />
                   <span>Sign In</span>
-                  <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </motion.div>
 
@@ -255,9 +255,9 @@ const LandingPage = () => {
               >
                 <Link
                   to="/login"
-                  className="btn-primary px-8 py-4 text-lg font-bold flex items-center space-x-3"
+                  className="btn-primary px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-bold flex items-center space-x-2 sm:space-x-3"
                 >
-                  <UserPlus className="w-6 h-6" />
+                  <UserPlus className="w-5 h-5 sm:w-6 sm:h-6" />
                   <span>Create Account</span>
                 </Link>
               </motion.div>
@@ -309,13 +309,13 @@ const LandingPage = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-24 relative">
+      <section className="py-16 sm:py-20 md:py-24 relative">
         <motion.div
           className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
           style={{ y: y2 }}
         >
           <motion.div
-            className="text-center mb-20"
+            className="text-center mb-12 sm:mb-16 md:mb-20"
             initial={{ opacity: 0, y: 100 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -397,10 +397,10 @@ const LandingPage = () => {
       </section>
 
       {/* Categories Section */}
-      <section className="py-24 relative">
+      <section className="py-16 sm:py-20 md:py-24 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
-            className="text-center mb-20"
+            className="text-center mb-12 sm:mb-16 md:mb-20"
             initial={{ opacity: 0, y: 100 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -461,7 +461,7 @@ const LandingPage = () => {
       </section>
 
       {/* Featured Products */}
-      <section className="py-24 relative">
+      <section className="py-16 sm:py-20 md:py-24 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-20">
             <motion.div
@@ -516,7 +516,7 @@ const LandingPage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-32 relative overflow-hidden">
+      <section className="py-20 sm:py-24 md:py-32 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-neon-pink via-neon-purple to-neon-blue opacity-20" />
         <div className="absolute inset-0 bg-mesh animate-gradient-xy opacity-40" />
 
