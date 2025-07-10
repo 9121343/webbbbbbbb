@@ -212,7 +212,7 @@ const LoginPage = () => {
             </motion.div>
 
             <motion.p
-              className="text-lg text-white/70 max-w-2xl leading-relaxed"
+              className="text-sm sm:text-base lg:text-lg text-white/70 max-w-2xl leading-relaxed px-4 sm:px-0"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.2 }}
