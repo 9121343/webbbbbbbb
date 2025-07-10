@@ -277,7 +277,7 @@ const LoginPage = () => {
                   >
                     <Lock className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                   </motion.div>
-                  <h2 className="text-2xl font-display font-bold text-white mb-2">
+                  <h2 className="text-xl sm:text-2xl font-display font-bold text-white mb-2">
                     {isSignUp ? "Join the Matrix" : "Enter Portal"}
                   </h2>
                   <p className="text-white/60">
